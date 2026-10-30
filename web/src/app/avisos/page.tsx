@@ -1,3 +1,4 @@
+import { Bell, Heart, Mail, Smartphone } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { BotonAvisos } from "@/components/BotonAvisos";
@@ -24,7 +25,7 @@ export default function Avisos() {
       </section>
       <div className="contenedor ajustes">
         <Revelar className="ajuste">
-          <div className="ajuste-icono" aria-hidden="true">🔔</div>
+          <div className="ajuste-icono" aria-hidden="true"><Bell size={24} /></div>
           <div>
             <h2>Aviso de las 6:00</h2>
             <p>
@@ -36,7 +37,7 @@ export default function Avisos() {
         </Revelar>
 
         <Revelar className="ajuste solo-web" retraso={0.05}>
-          <div className="ajuste-icono" aria-hidden="true">📱</div>
+          <div className="ajuste-icono" aria-hidden="true"><Smartphone size={24} /></div>
           <div>
             <h2>Instalar la app</h2>
             <p>Tenla a un toque desde tu pantalla de inicio, sin tiendas ni cuentas. En iPhone es necesaria para recibir avisos.</p>
@@ -44,8 +45,19 @@ export default function Avisos() {
           </div>
         </Revelar>
 
+        <Revelar className="ajuste" retraso={0.08}>
+          <div className="ajuste-icono" aria-hidden="true"><Heart size={24} /></div>
+          <div>
+            <h2>Mis guardados</h2>
+            <p>Los audios que marcaste con Guardar. Se quedan solo en este dispositivo.</p>
+            <Link className="boton boton-contorno" href="/favoritos">
+              <Heart size={18} aria-hidden="true" /> Ver mis guardados
+            </Link>
+          </div>
+        </Revelar>
+
         <Revelar className="ajuste" retraso={0.1}>
-          <div className="ajuste-icono" aria-hidden="true">✉️</div>
+          <div className="ajuste-icono" aria-hidden="true"><Mail size={24} /></div>
           <div>
             <h2>Contacto</h2>
             <p>

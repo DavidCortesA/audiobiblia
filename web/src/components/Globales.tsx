@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Baby, Bell, BookOpen, Heart, Menu, Play, ScrollText, Sunrise, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { BotonAvisos } from "./BotonAvisos";
@@ -45,6 +46,9 @@ export function Encabezado() {
             </Link>
           ))}
         </nav>
+        <Link href="/avisos" className="boton-icono solo-app" aria-label="Avisos y ajustes">
+          <Bell size={22} strokeWidth={1.8} aria-hidden="true" />
+        </Link>
         <button
           type="button"
           className="boton-menu"
@@ -56,8 +60,7 @@ export function Encabezado() {
             setAbierto((a) => !a);
           }}
         >
-          <span />
-          <span />
+          {abierto ? <X size={24} aria-hidden="true" /> : <Menu size={24} aria-hidden="true" />}
         </button>
       </div>
       <AnimatePresence>
@@ -76,7 +79,7 @@ export function Encabezado() {
               animate="visible"
               variants={{ visible: { transition: { staggerChildren: 0.07, delayChildren: 0.08 } } }}
             >
-              {[["/", "Inicio", "Los audios de hoy"] as const, ...ENLACES, ["/avisos", "Avisos", "Activar o desactivar las notificaciones"] as const].map(([href, texto, sub]) => (
+              {[["/", "Inicio", "Los audios de hoy"] as const, ...ENLACES, ["/favoritos", "Guardados", "Tus audios favoritos"] as const, ["/avisos", "Avisos", "Activar o desactivar las notificaciones"] as const].map(([href, texto, sub]) => (
                 <motion.li
                   key={href}
                   variants={{ oculto: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } } }}
@@ -108,7 +111,7 @@ export function BarraMovil() {
   return (
     <div className="barra-movil">
       <Link className="boton boton-fantasma" href="/#hoy">
-        ▶ Escuchar hoy
+        <Play size={16} fill="currentColor" aria-hidden="true" /> Escuchar hoy
       </Link>
       <BotonAvisos compacto />
     </div>
@@ -116,15 +119,11 @@ export function BarraMovil() {
 }
 
 const PESTANAS = [
-  { href: "/", texto: "Hoy", icono: <path d="M12 3v2M5.6 5.6 7 7M3 12h2M19 12h2M17 7l1.4-1.4M7 17a5 5 0 1 1 10 0M3 21h18" /> },
-  { href: "/biblia", texto: "Biblia", icono: <path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 21a2 2 0 0 1 2-2h13M9 7h6" /> },
-  { href: "/proverbios", texto: "Proverbios", icono: <path d="M4 4h16v16H4zM4 9h16M9 4v5M8 13h3M8 16h6" /> },
-  { href: "/ninos", texto: "Niños", icono: <path d="M12 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM6 22v-5l-2-4 4-2h8l4 2-2 4v5M9 22v-4h6v4" /> },
-  {
-    href: "/avisos",
-    texto: "Avisos",
-    icono: <path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0" />,
-  },
+  { href: "/", texto: "Hoy", Icono: Sunrise },
+  { href: "/biblia", texto: "Biblia", Icono: BookOpen },
+  { href: "/proverbios", texto: "Proverbios", Icono: ScrollText },
+  { href: "/ninos", texto: "Niños", Icono: Baby },
+  { href: "/favoritos", texto: "Guardados", Icono: Heart },
 ];
 
 /** Barra de pestañas de abajo: solo se ve cuando el sitio está instalado como app. */
@@ -132,14 +131,12 @@ export function BarraApp() {
   const ruta = usePathname();
   return (
     <nav className="barra-app" aria-label="Secciones">
-      {PESTANAS.map(({ href, texto, icono }) => {
+      {PESTANAS.map(({ href, texto, Icono }) => {
         const activa = href === "/" ? ruta === "/" : ruta.startsWith(href);
         return (
           <Link key={href} href={href} aria-current={activa ? "page" : undefined}>
             {activa && <motion.span layoutId="pestana-activa" className="pestana-fondo" transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }} />}
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              {icono}
-            </svg>
+            <Icono size={22} strokeWidth={1.8} aria-hidden="true" />
             <span>{texto}</span>
           </Link>
         );
@@ -155,7 +152,6 @@ export function RegistrarServiceWorker() {
     const aplicar = () => {
       const app = consulta.matches || (navigator as { standalone?: boolean }).standalone === true;
       if (app) document.documentElement.setAttribute("data-modo", "app");
-      else document.documentElement.removeAttribute("data-modo");
     };
     aplicar();
     consulta.addEventListener("change", aplicar);

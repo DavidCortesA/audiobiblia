@@ -1,3 +1,4 @@
+import { ExternalLink } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -104,7 +105,7 @@ export default async function PaginaSerie({ params }: PageProps<"/[serie]">) {
                     target="_blank"
                     rel="noopener"
                   >
-                    Ver los {delAño.length} en YouTube ↗
+                    Ver los {delAño.length} en YouTube <ExternalLink size={16} aria-hidden="true" />
                   </a>
                 </Revelar>
               )}

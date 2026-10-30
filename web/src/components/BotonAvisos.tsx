@@ -1,5 +1,6 @@
 "use client";
 
+import { Bell, BellOff } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -152,7 +153,7 @@ export function BotonAvisos({ variante = "sol", compacto = false }: { variante?:
             if (window.confirm("¿Desactivar el aviso de las 6:00 en este dispositivo?")) desactivar();
           }}
         >
-          Desactivar avisos
+          <BellOff size={18} aria-hidden="true" /> Desactivar avisos
         </button>
       ) : (
         <button
@@ -175,9 +176,5 @@ export function BotonAvisos({ variante = "sol", compacto = false }: { variante?:
 }
 
 function Campana() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true">
-      <path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
+  return <Bell size={18} strokeWidth={2.2} aria-hidden="true" />;
 }

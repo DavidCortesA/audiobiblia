@@ -1,9 +1,11 @@
 "use client";
 
+import { ExternalLink, Play } from "lucide-react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { SERIES, SITIO, type Serie } from "@/lib/sitio";
+import { AccionesVideo } from "./AccionesVideo";
 
 export interface VideoReproducible {
   slug: string;
@@ -13,6 +15,7 @@ export interface VideoReproducible {
   youtube: string | null;
   facebook: string | null;
   miniatura: string;
+  fecha: string;
 }
 
 type Fuente = "youtube" | "facebook";
@@ -44,7 +47,7 @@ export function MarcoVideo({ video, fuente }: { video: VideoReproducible; fuente
     <button type="button" className="lite" onClick={() => setActivo(true)} aria-label={`Reproducir: ${video.titulo}`}>
       <Image src={video.miniatura} alt="" fill sizes="(max-width: 900px) 100vw, 760px" priority />
       <span className="lite-play" aria-hidden="true">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z" /></svg>
+        <Play size={32} fill="currentColor" strokeWidth={1.5} style={{ marginLeft: 4 }} />
       </span>
     </button>
   );
@@ -81,12 +84,12 @@ export function SelectorFuente({
       <div className="enlaces-externos">
         {video.youtube && (
           <a href={`https://youtu.be/${video.youtube}`} target="_blank" rel="noopener">
-            Abrir en YouTube ↗
+            YouTube <ExternalLink size={14} aria-hidden="true" />
           </a>
         )}
         {video.facebook && (
           <a href={urlFacebook(video.facebook)} target="_blank" rel="noopener">
-            Abrir en Facebook ↗
+            Facebook <ExternalLink size={14} aria-hidden="true" />
           </a>
         )}
       </div>
@@ -136,10 +139,15 @@ export function Reproductor({ videos, etiqueta }: { videos: VideoReproducible[];
             </button>
           ))}
         </div>
+        <AccionesVideo video={datosAccion(video)} tema="oscuro" />
         <SelectorFuente video={video} fuente={fuente} onCambio={setFuente} />
       </div>
     </div>
   );
+}
+
+function datosAccion(v: VideoReproducible) {
+  return { slug: v.slug, serie: v.serie, titulo: v.titulo, lectura: v.lectura, miniatura: v.miniatura, fecha: v.fecha };
 }
 
 /** Para la página de un video: solo el marco y la elección de fuente. */
@@ -150,7 +158,8 @@ export function ReproductorUnico({ video }: { video: VideoReproducible }) {
       <div className="marco">
         <MarcoVideo key={fuente} video={video} fuente={fuente} />
       </div>
-      <div className="fuente-clara" style={{ marginTop: 16, display: "grid", gap: 10 }}>
+      <div className="fuente-clara" style={{ marginTop: 16, display: "grid", gap: 14 }}>
+        <AccionesVideo video={datosAccion(video)} />
         <SelectorFuente video={video} fuente={fuente} onCambio={setFuente} />
       </div>
     </>

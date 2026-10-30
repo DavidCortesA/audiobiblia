@@ -1,3 +1,4 @@
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -98,18 +99,19 @@ export default async function PaginaVideo({ params }: PageProps<"/[serie]/[slug]
               youtube: video.youtube,
               facebook: video.facebook,
               miniatura: video.miniatura,
+              fecha: video.fecha,
             }}
           />
           <nav className="navegacion-videos" aria-label="Otros audios de la serie">
             {anterior ? (
               <Link href={`/${serie}/${anterior.slug}`}>
-                <small>← Anterior</small>
+                <small><ArrowLeft size={12} aria-hidden="true" /> Anterior</small>
                 {anterior.lectura}
               </Link>
             ) : <span />}
             {siguiente ? (
               <Link href={`/${serie}/${siguiente.slug}`} style={{ textAlign: "right" }}>
-                <small>Siguiente →</small>
+                <small>Siguiente <ArrowRight size={12} aria-hidden="true" /></small>
                 {siguiente.lectura}
               </Link>
             ) : <span />}

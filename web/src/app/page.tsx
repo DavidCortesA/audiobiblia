@@ -1,3 +1,4 @@
+import { Bell, Play } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { BotonAvisos } from "@/components/BotonAvisos";
@@ -68,10 +69,10 @@ export default async function Inicio() {
             <LineaHero>
               <div className="hero-acciones">
                 <a className="boton boton-sol" href="#hoy">
-                  ▶ Escuchar el audio de hoy
+                  <Play size={18} fill="currentColor" aria-hidden="true" /> Escuchar el audio de hoy
                 </a>
                 <a className="boton boton-fantasma solo-web" href="#app">
-                  Recibir avisos
+                  <Bell size={18} aria-hidden="true" /> Recibir avisos
                 </a>
               </div>
             </LineaHero>
@@ -84,8 +85,8 @@ export default async function Inicio() {
           {delDia.length ? (
             <Reproductor
               etiqueta={esHoy ? `Hoy · ${fechaLarga(hoy)}` : `Lo más reciente · ${fechaLarga(delDia[0].fecha)}`}
-              videos={delDia.map(({ slug, serie, titulo, lectura, youtube, facebook, miniatura }) => ({
-                slug, serie, titulo, lectura, youtube, facebook, miniatura,
+              videos={delDia.map(({ slug, serie, titulo, lectura, youtube, facebook, miniatura, fecha }) => ({
+                slug, serie, titulo, lectura, youtube, facebook, miniatura, fecha,
               }))}
             />
           ) : (
