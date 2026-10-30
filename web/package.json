@@ -11,7 +11,6 @@
   "dependencies": {
     "@upstash/redis": "^1.40.0",
     "@vercel/analytics": "^2.0.1",
-    "@vercel/blob": "^2.8.2",
     "fast-xml-parser": "^5.11.2",
     "lucide-react": "^1.65.0",
     "motion": "^14.9.0",
@@ -25,6 +24,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/web-push": "^3.6.4",
+    "@vercel/blob": "^2.4.0",
     "eslint": "^9",
     "eslint-config-next": "16.4.3",
     "typescript": "^5"
