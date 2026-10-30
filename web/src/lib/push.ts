@@ -18,6 +18,18 @@ export interface Aviso {
   tag?: string;
 }
 
+/** Envía un aviso a una sola suscripción. Devuelve si se entregó al servicio de notificaciones. */
+export async function avisarA(sub: PushSubscription, aviso: Aviso) {
+  if (!pushConfigurado) return false;
+  try {
+    await webpush.sendNotification(sub, JSON.stringify(aviso), { TTL: 60 * 60, urgency: "high" });
+    return true;
+  } catch (e) {
+    console.error("[avisos] bienvenida falló", (e as { statusCode?: number; body?: string }).statusCode, (e as { body?: string }).body);
+    return false;
+  }
+}
+
 /** Envía el aviso a todos los suscriptores y limpia los que ya no existen. */
 export async function avisarATodos(aviso: Aviso) {
   const subs = await listarSuscripciones();

@@ -42,6 +42,7 @@ const MENSAJES: Partial<Record<Estado, string>> = {
 
 export function BotonAvisos({ variante = "sol", compacto = false }: { variante?: "sol" | "oscuro"; compacto?: boolean }) {
   const [estado, setEstado] = useState<Estado>("revisando");
+  const [detalle, setDetalle] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -66,25 +67,39 @@ export function BotonAvisos({ variante = "sol", compacto = false }: { variante?:
 
   async function activar() {
     setEstado("pidiendo");
+    let paso = "permiso";
     try {
+      // En iPhone el permiso debe pedirse directo desde el toque, antes de cualquier otra espera.
       const permiso = await Notification.requestPermission();
       if (permiso !== "granted") {
         setEstado(permiso === "denied" ? "denegado" : "listo");
         return;
       }
+      paso = "service-worker";
       const reg = (await navigator.serviceWorker.getRegistration()) ?? (await navigator.serviceWorker.register("/sw.js"));
-      await navigator.serviceWorker.ready;
-      const sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: aBytes(LLAVE) });
+      const listo = await navigator.serviceWorker.ready;
+      paso = "suscribir";
+      const existente = await listo.pushManager.getSubscription();
+      const sub =
+        existente ?? (await (listo ?? reg).pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: aBytes(LLAVE) }));
+      paso = "guardar";
       const res = await fetch("/api/push/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(sub),
       });
-      if (!res.ok) throw new Error(String(res.status));
+      if (!res.ok) throw new Error(`servidor ${res.status}`);
       setEstado("suscrito");
       router.push("/suscrito");
-    } catch {
+    } catch (e) {
+      const detalle = e instanceof Error ? `${e.name}: ${e.message}` : String(e);
+      setDetalle(`${paso} · ${detalle}`);
       setEstado("error");
+      fetch("/api/push/error", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ paso, error: detalle, permiso: Notification.permission, instalada: esInstalada() }),
+      }).catch(() => {});
     }
   }
 
@@ -140,6 +155,7 @@ export function BotonAvisos({ variante = "sol", compacto = false }: { variante?:
       )}
       <p className={`estado-avisos ${estado === "suscrito" ? "ok" : ""} ${estado === "error" || estado === "denegado" ? "error" : ""}`} role="status">
         {mensaje ?? ""}
+        {estado === "error" && detalle && <small style={{ display: "block", opacity: 0.7 }}>({detalle})</small>}
       </p>
     </div>
   );
