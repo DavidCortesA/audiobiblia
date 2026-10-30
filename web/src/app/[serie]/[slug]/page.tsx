@@ -44,7 +44,6 @@ export async function generateMetadata({ params }: PageProps<"/[serie]/[slug]">)
       type: "video.other",
       title: titulo,
       description: descripcion,
-      images: [{ url: video.miniatura, width: 480, height: 360, alt: video.titulo }],
       videos: video.youtube ? [{ url: `https://www.youtube.com/watch?v=${video.youtube}` }] : undefined,
     },
   };
@@ -100,6 +99,7 @@ export default async function PaginaVideo({ params }: PageProps<"/[serie]/[slug]
               facebook: video.facebook,
               miniatura: video.miniatura,
               fecha: video.fecha,
+              dia: video.dia,
               audio: video.audio ?? null,
             }}
           />

@@ -406,6 +406,31 @@ button { font: inherit; }
 .acciones-oscuro .accion-aviso { color: var(--sol-claro); }
 .acciones-claro .accion-aviso { color: var(--musgo); }
 
+/* Progreso */
+.marca-escuchado { display: inline-grid; place-items: center; color: var(--ok, #1f7a4d); }
+.marca-tarjeta, .marca-capitulo { position: absolute; top: 8px; right: 8px; width: 30px; height: 30px; border-radius: 50%; background: var(--papel); color: #2f7a4f; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18); }
+.capitulo { position: relative; }
+.marca-capitulo { width: 26px; height: 26px; }
+.capitulo-hoy .marca-capitulo { background: var(--noche); color: var(--sol); }
+.marca-pestana { vertical-align: -2px; margin-left: 4px; color: #2f7a4f; }
+.pestana-serie:not([aria-selected="true"]) .marca-pestana { color: var(--sol-claro); }
+.racha-corta { display: inline-flex; align-items: center; gap: 6px; font-family: var(--f-display); font-weight: 600; font-size: 13px; letter-spacing: 0.04em; color: var(--sol-claro); }
+.progreso { display: grid; gap: 14px; }
+.progreso-tarjetas { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; min-height: 120px; }
+.progreso-tarjeta { display: grid; gap: 2px; align-content: start; background: var(--crema); border-radius: var(--radio); padding: 20px; color: var(--tinta); }
+.progreso-tarjeta svg { color: var(--brasa); margin-bottom: 6px; }
+.progreso-racha { background: var(--bosque); color: var(--crema); }
+.progreso-racha svg { color: var(--sol); }
+.progreso-numero { font-family: var(--f-display); font-weight: 700; font-size: 48px; line-height: 1; }
+.progreso-texto { font-size: 14px; opacity: 0.8; }
+.progreso-plan { background: var(--crema); border-radius: var(--radio); padding: 20px; }
+.progreso-plan-cabeza { display: flex; align-items: center; gap: 10px; }
+.progreso-plan-cabeza svg { color: var(--brasa); flex-shrink: 0; }
+.progreso-porcentaje { margin-left: auto; font-family: var(--f-display); font-weight: 700; font-size: 22px; color: var(--brasa); }
+.progreso-barra { height: 10px; border-radius: 999px; background: var(--papel); margin: 14px 0 12px; overflow: hidden; }
+.progreso-barra span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--sol), var(--brasa)); transition: width 0.8s var(--ease-salida); }
+.progreso-plan p { margin: 0; font-size: 14px; color: var(--tinta-suave); }
+
 /* Mis guardados */
 .lista-favoritos { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
 .lista-favoritos li { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 8px; background: var(--crema); border-radius: var(--radio-chico); padding: 10px; }

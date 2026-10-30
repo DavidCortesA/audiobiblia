@@ -48,10 +48,10 @@ export default function Avisos() {
         <Revelar className="ajuste" retraso={0.08}>
           <div className="ajuste-icono" aria-hidden="true"><Heart size={24} /></div>
           <div>
-            <h2>Mis guardados</h2>
-            <p>Los audios que marcaste con Guardar. Se quedan solo en este dispositivo.</p>
+            <h2>Mi espacio</h2>
+            <p>Tu racha, tu avance en la Biblia de este año y los audios que guardaste. Se quedan solo en este dispositivo.</p>
             <Link className="boton boton-contorno" href="/favoritos">
-              <Heart size={18} aria-hidden="true" /> Ver mis guardados
+              <Heart size={18} aria-hidden="true" /> Ver mi espacio
             </Link>
           </div>
         </Revelar>

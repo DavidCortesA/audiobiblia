@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { SERIES, SITIO, type Serie } from "@/lib/sitio";
 import { AccionesVideo } from "./AccionesVideo";
+import { MarcaEscuchado, RachaCorta } from "./Progreso";
 import { ReproductorAudio, type PistaAudio } from "./ReproductorAudio";
 
 export interface VideoReproducible {
@@ -17,6 +18,7 @@ export interface VideoReproducible {
   facebook: string | null;
   miniatura: string;
   fecha: string;
+  dia: number;
   audio: string | null;
 }
 
@@ -115,7 +117,7 @@ function fuenteReal(video: VideoReproducible, elegida: Fuente): Fuente {
 }
 
 function pista(v: VideoReproducible): PistaAudio {
-  return { slug: v.slug, serie: v.serie, titulo: v.titulo, lectura: v.lectura, miniatura: v.miniatura, audio: v.audio! };
+  return { slug: v.slug, serie: v.serie, titulo: v.titulo, lectura: v.lectura, miniatura: v.miniatura, audio: v.audio!, fecha: v.fecha, dia: v.dia };
 }
 
 /** Reproductor de "hoy": audio/video grande + pestañas por serie. Al terminar un audio sigue con el siguiente. */
@@ -167,6 +169,7 @@ export function Reproductor({ videos, etiqueta }: { videos: VideoReproducible[];
       </div>
       <div className="hoy-panel">
         <span className="ceja">{etiqueta}</span>
+        <RachaCorta />
         <div className="pestanas-serie" role="tablist" aria-label="Audios del día">
           {videos.map((v) => (
             <button
@@ -183,7 +186,9 @@ export function Reproductor({ videos, etiqueta }: { videos: VideoReproducible[];
               {v.serie === serie && (
                 <motion.span layoutId="fondo-activo" className="fondo-activo" transition={{ duration: 0.5, ease: EASE }} />
               )}
-              <span className="nombre">{SERIES[v.serie].nombre}</span>
+              <span className="nombre">
+                {SERIES[v.serie].nombre} <MarcaEscuchado slug={v.slug} variante="pestana" />
+              </span>
               <span className="lectura">{v.lectura}</span>
             </button>
           ))}
@@ -197,7 +202,7 @@ export function Reproductor({ videos, etiqueta }: { videos: VideoReproducible[];
 }
 
 function datosAccion(v: VideoReproducible) {
-  return { slug: v.slug, serie: v.serie, titulo: v.titulo, lectura: v.lectura, miniatura: v.miniatura, fecha: v.fecha };
+  return { slug: v.slug, serie: v.serie, titulo: v.titulo, lectura: v.lectura, miniatura: v.miniatura, fecha: v.fecha, dia: v.dia };
 }
 
 /** Para la página de un video: el reproductor y la elección de fuente. */

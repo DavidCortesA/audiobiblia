@@ -3,6 +3,7 @@
 import { Pause, Play, RotateCcw, RotateCw } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { marcarEscuchado } from "@/lib/progreso";
 import { SERIES, SITIO, type Serie } from "@/lib/sitio";
 
 export interface PistaAudio {
@@ -12,6 +13,8 @@ export interface PistaAudio {
   lectura: string;
   miniatura: string;
   audio: string;
+  fecha: string;
+  dia: number;
 }
 
 const VELOCIDADES = [1, 1.25, 1.5, 0.85];
@@ -137,6 +140,10 @@ export function ReproductorAudio({
     const el = audio.current;
     if (!el) return;
     setTiempo(el.currentTime);
+    // Al llegar al 90 % cuenta como escuchado.
+    if (el.duration && el.currentTime / el.duration >= 0.9) {
+      marcarEscuchado(pista.slug, { serie: pista.serie, fecha: pista.fecha, dia: pista.dia });
+    }
     // Guarda dónde vas cada 5 s para continuar después.
     if (Math.abs(el.currentTime - ultimoGuardado.current) > 5) {
       ultimoGuardado.current = el.currentTime;

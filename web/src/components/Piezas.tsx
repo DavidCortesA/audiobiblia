@@ -4,12 +4,14 @@ import { diaSemana, fechaCorta } from "@/lib/fechas";
 import { SERIES, SITIO } from "@/lib/sitio";
 import type { Video } from "@/lib/tipos";
 import { Escalonado, RevelarHijo } from "./Movimiento";
+import { MarcaEscuchado } from "./Progreso";
 
 export function TarjetaVideo({ video, prioridad = false }: { video: Video; prioridad?: boolean }) {
   return (
     <Link href={`/${video.serie}/${video.slug}`} className="tarjeta" prefetch={false}>
       <div className="tarjeta-imagen">
         <Image src={video.miniatura} alt={`Portada: ${video.titulo}`} fill sizes="(max-width: 900px) 72vw, 320px" priority={prioridad} />
+        <MarcaEscuchado slug={video.slug} variante="tarjeta" />
       </div>
       <div className="tarjeta-fecha">
         {fechaCorta(video.fecha)} · {SERIES[video.serie].corto}
@@ -83,7 +85,7 @@ export function Pie() {
           <div>
             <h2>Sitio</h2>
             <ul>
-              <li><Link href="/favoritos">Mis guardados</Link></li>
+              <li><Link href="/favoritos">Mi espacio</Link></li>
               <li><Link href="/avisos">Avisos y app</Link></li>
               <li><Link href="/privacidad">Privacidad</Link></li>
               <li><Link href="/terminos">Términos de uso</Link></li>

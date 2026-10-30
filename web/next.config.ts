@@ -3,6 +3,10 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
+  // Tipografías e imágenes que lee el generador de imágenes de cada audio.
+  outputFileTracingIncludes: {
+    "/[serie]/[slug]/**": ["./assets/fonts/*.woff", "./public/img/amanecer-1200.jpg", "./public/img/logo-blanco.png"],
+  },
   images: {
     remotePatterns: [{ protocol: "https", hostname: "i.ytimg.com", pathname: "/vi/**" }],
   },

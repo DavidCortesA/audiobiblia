@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Escalonado, Revelar, RevelarHijo } from "@/components/Movimiento";
 import { Proximos, TarjetaVideo } from "@/components/Piezas";
+import { MarcaEscuchado } from "@/components/Progreso";
 import { delAnio, getCatalogo, proverbiosDelMes } from "@/lib/datos";
 import { fechaCorta } from "@/lib/fechas";
 import { LISTA_SERIES, SERIES, SITIO, esSerie } from "@/lib/sitio";
@@ -71,6 +72,7 @@ export default async function PaginaSerie({ params }: PageProps<"/[serie]">) {
                       aria-label={`Proverbios ${capitulo}${capitulo === capituloHoy ? " (hoy)" : ""}, publicado el ${fechaCorta(video.fecha)}`}
                     >
                       <span className="capitulo-numero">{capitulo}</span>
+                      <MarcaEscuchado slug={video.slug} variante="capitulo" />
                       <span className="capitulo-fecha">{capitulo === capituloHoy ? "Hoy" : fechaCorta(video.fecha)}</span>
                     </Link>
                   </RevelarHijo>

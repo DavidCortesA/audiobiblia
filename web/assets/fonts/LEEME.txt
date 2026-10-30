@@ -1,0 +1,2 @@
+Josefin Sans y Literata, licencia SIL Open Font License 1.1 (vía Fontsource).
+Se usan para generar las imágenes de cada audio (next/og no acepta woff2).

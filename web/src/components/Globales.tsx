@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Baby, Bell, BookOpen, Heart, Menu, Play, ScrollText, Sunrise, X } from "lucide-react";
+import { Baby, Bell, BookHeart, BookOpen, Menu, Play, ScrollText, Sunrise, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { BotonAvisos } from "./BotonAvisos";
@@ -79,7 +79,7 @@ export function Encabezado() {
               animate="visible"
               variants={{ visible: { transition: { staggerChildren: 0.07, delayChildren: 0.08 } } }}
             >
-              {[["/", "Inicio", "Los audios de hoy"] as const, ...ENLACES, ["/favoritos", "Guardados", "Tus audios favoritos"] as const, ["/avisos", "Avisos", "Activar o desactivar las notificaciones"] as const].map(([href, texto, sub]) => (
+              {[["/", "Inicio", "Los audios de hoy"] as const, ...ENLACES, ["/favoritos", "Mi espacio", "Tu progreso y tus guardados"] as const, ["/avisos", "Avisos", "Activar o desactivar las notificaciones"] as const].map(([href, texto, sub]) => (
                 <motion.li
                   key={href}
                   variants={{ oculto: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } } }}
@@ -123,7 +123,7 @@ const PESTANAS = [
   { href: "/biblia", texto: "Biblia", Icono: BookOpen },
   { href: "/proverbios", texto: "Proverbios", Icono: ScrollText },
   { href: "/ninos", texto: "Niños", Icono: Baby },
-  { href: "/favoritos", texto: "Guardados", Icono: Heart },
+  { href: "/favoritos", texto: "Mi espacio", Icono: BookHeart },
 ];
 
 /** Barra de pestañas de abajo: solo se ve cuando el sitio está instalado como app. */
