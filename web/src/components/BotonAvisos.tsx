@@ -16,6 +16,7 @@ type Estado =
   | "error";
 
 const LLAVE = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ?? "";
+const EVENTO = "avisos-cambio";
 
 function aBytes(base64: string) {
   const relleno = "=".repeat((4 - (base64.length % 4)) % 4);
@@ -47,7 +48,7 @@ export function BotonAvisos({ variante = "sol", compacto = false }: { variante?:
 
   useEffect(() => {
     let cancelado = false;
-    (async () => {
+    const revisar = async () => {
       let siguiente: Estado = "listo";
       if (!LLAVE) siguiente = "sin-config";
       else if (esIOS() && !esInstalada()) siguiente = "ios-instalar";
@@ -59,9 +60,13 @@ export function BotonAvisos({ variante = "sol", compacto = false }: { variante?:
         if (reg && (await reg.pushManager.getSubscription())) siguiente = "suscrito";
       }
       if (!cancelado) setEstado(siguiente);
-    })();
+    };
+    revisar();
+    // Todos los botones (el de la sección y el de la barra de abajo) se enteran del cambio.
+    window.addEventListener(EVENTO, revisar);
     return () => {
       cancelado = true;
+      window.removeEventListener(EVENTO, revisar);
     };
   }, []);
 
@@ -90,6 +95,7 @@ export function BotonAvisos({ variante = "sol", compacto = false }: { variante?:
       });
       if (!res.ok) throw new Error(`servidor ${res.status}`);
       setEstado("suscrito");
+      window.dispatchEvent(new Event(EVENTO));
       router.push("/suscrito");
     } catch (e) {
       const detalle = e instanceof Error ? `${e.name}: ${e.message}` : String(e);
@@ -117,6 +123,7 @@ export function BotonAvisos({ variante = "sol", compacto = false }: { variante?:
         await sub.unsubscribe();
       }
       setEstado("listo");
+      window.dispatchEvent(new Event(EVENTO));
     } catch {
       setEstado("error");
     }
