@@ -3,7 +3,7 @@ export const SITIO = {
   nombreLargo: "Audio Biblia · Castillo del Rey",
   iglesia: "Castillo del Rey, A.R.",
   ciudad: "Monterrey, México",
-  url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://audio-biblia.vercel.app").replace(/\/$/, ""),
+  url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://audiobiblia.vercel.app").replace(/\/$/, ""),
   descripcion:
     "La Biblia en audio para cada mañana: lectura diaria, Proverbios del día y Audio Biblia para niños. Nuevo audio a las 6:00 AM.",
   zonaHoraria: "America/Monterrey",

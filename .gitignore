@@ -23,3 +23,5 @@ descargas_drive/
 web/.local/
 web/.env*
 !web/.env.example
+.vercel
+.env*

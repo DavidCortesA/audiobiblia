@@ -8,7 +8,7 @@ const privada = process.env.VAPID_PRIVATE_KEY;
 export const pushConfigurado = Boolean(publica && privada);
 
 if (publica && privada) {
-  webpush.setVapidDetails(`mailto:${SITIO.contactoCorreo || "avisos@audio-biblia.app"}`, publica, privada);
+  webpush.setVapidDetails(`mailto:${SITIO.contactoCorreo || "avisos@audiobiblia.vercel.app"}`, publica, privada);
 }
 
 export interface Aviso {
