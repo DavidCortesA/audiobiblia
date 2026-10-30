@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   partialPrefetching: true,
   // Tipografías e imágenes que lee el generador de imágenes de cada audio.
   outputFileTracingIncludes: {
-    "/[serie]/[slug]/**": ["./assets/fonts/*.woff", "./public/img/amanecer-1200.jpg", "./public/img/logo-blanco.png"],
+    "/[serie]/[slug]/**": ["./assets/fonts/*.woff", "./public/img/amanecer-1200.jpg", "./public/img/logo-blanco.png", "./public/img/ninos-portada.jpg", "./public/img/proverbios-fondo.jpg"],
   },
   images: {
     remotePatterns: [{ protocol: "https", hostname: "i.ytimg.com", pathname: "/vi/**" }],
