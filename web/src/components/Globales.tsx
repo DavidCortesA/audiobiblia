@@ -149,6 +149,18 @@ export function BarraApp() {
 }
 
 export function RegistrarServiceWorker() {
+  // Segunda revisión del modo app ya con la página cargada (por si el script inicial no alcanzó).
+  useEffect(() => {
+    const consulta = window.matchMedia("(display-mode: standalone)");
+    const aplicar = () => {
+      const app = consulta.matches || (navigator as { standalone?: boolean }).standalone === true;
+      if (app) document.documentElement.setAttribute("data-modo", "app");
+      else document.documentElement.removeAttribute("data-modo");
+    };
+    aplicar();
+    consulta.addEventListener("change", aplicar);
+    return () => consulta.removeEventListener("change", aplicar);
+  }, []);
   useEffect(() => {
     if ("serviceWorker" in navigator && process.env.NODE_ENV === "production") {
       navigator.serviceWorker.register("/sw.js").catch(() => {});

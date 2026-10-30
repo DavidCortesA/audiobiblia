@@ -371,16 +371,16 @@ button { font: inherit; }
 
 /* ========== Modo app (instalada en el celular, tablet o computadora) ========== */
 .solo-app, .barra-app { display: none; }
-.modo-app .solo-web { display: none !important; }
-.modo-app .barra-movil, .modo-app .pie, .modo-app .boton-menu, .modo-app .nav-escritorio { display: none; }
-.modo-app body { padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
-.modo-app .hero { min-height: 0; }
-.modo-app .hero-contenido { padding-top: calc(104px + env(safe-area-inset-top)); padding-bottom: clamp(130px, 18vh, 180px); }
-.modo-app .hero-texto, .modo-app .hero-acciones { display: none; }
-.modo-app .hero h1 { font-size: clamp(40px, 11vw, 80px); }
-.modo-app .cabeza-pagina { padding-top: calc(100px + env(safe-area-inset-top)); }
-.modo-app .aviso-cookies { bottom: calc(96px + env(safe-area-inset-bottom)); }
-.modo-app .barra-app {
+[data-modo="app"] .solo-web { display: none !important; }
+[data-modo="app"] .barra-movil, [data-modo="app"] .pie, [data-modo="app"] .boton-menu, [data-modo="app"] .nav-escritorio { display: none; }
+[data-modo="app"] body { padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
+[data-modo="app"] .hero { min-height: 0; }
+[data-modo="app"] .hero-contenido { padding-top: calc(104px + env(safe-area-inset-top)); padding-bottom: clamp(130px, 18vh, 180px); }
+[data-modo="app"] .hero-texto, [data-modo="app"] .hero-acciones { display: none; }
+[data-modo="app"] .hero h1 { font-size: clamp(40px, 11vw, 80px); }
+[data-modo="app"] .cabeza-pagina { padding-top: calc(100px + env(safe-area-inset-top)); }
+[data-modo="app"] .aviso-cookies { bottom: calc(96px + env(safe-area-inset-bottom)); }
+[data-modo="app"] .barra-app {
   display: flex; position: fixed; z-index: 45; left: 0; right: 0; bottom: 0;
   padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
   background: rgba(14, 26, 19, 0.94); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
@@ -396,9 +396,9 @@ button { font: inherit; }
 .barra-app a[aria-current="page"] { color: var(--noche); }
 .barra-app .pestana-fondo { position: absolute; inset: 0; z-index: 0; border-radius: inherit; background: var(--sol); }
 @media (min-width: 761px) {
-  .modo-app .barra-app {
+  [data-modo="app"] .barra-app {
     left: 50%; right: auto; bottom: calc(16px + env(safe-area-inset-bottom)); transform: translateX(-50%);
     width: min(560px, calc(100% - 32px)); padding: 8px; border-radius: 22px; border: 1px solid var(--linea-clara); box-shadow: var(--sombra);
   }
-  .modo-app body { padding-bottom: 110px; }
+  [data-modo="app"] body { padding-bottom: 110px; }
 }

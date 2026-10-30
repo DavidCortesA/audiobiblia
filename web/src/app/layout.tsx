@@ -28,7 +28,8 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-const DETECTAR_APP = `try{if(matchMedia("(display-mode: standalone)").matches||navigator.standalone===true)document.documentElement.classList.add("modo-app")}catch(e){}`;
+// Atributo propio (no clase): React no lo reescribe al hidratar <html>.
+const DETECTAR_APP = `try{if(matchMedia("(display-mode: standalone)").matches||navigator.standalone===true)document.documentElement.setAttribute("data-modo","app")}catch(e){}`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
