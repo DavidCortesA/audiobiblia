@@ -1,0 +1,126 @@
+# Copia este archivo a config.yaml y ajústalo.
+
+zona_horaria: America/Monterrey
+hora_publicacion: "06:00"
+
+# Número de "Día N" = día del año + ajuste. Tu canal va un día atrás
+# (29 oct = día 302 del año → "Día 301"), por eso -1.
+ajuste_dia: -1
+
+canal_origen: https://www.youtube.com/channel/UCJaQSWBy330FBq-bJTjzaPg/videos
+
+# Borrar el .mp4 local cuando ya quedó programado en YouTube y en todas las páginas.
+borrar_video_al_terminar: true
+
+# Plantillas de título/descripción. Variables disponibles:
+#   {titulo}       título original del video de origen
+#   {descripcion}  descripción original
+#   {lectura}      lectura de la Biblia diaria (ej. "1 Samuel 2, Salmo 38, Proverbios 22:7 y Hechos 13")
+#   {dia_anio}     número de "Día N" de la fecha de publicación (día del año + ajuste_dia)
+#   {dia_mes}      día del mes de la fecha de publicación
+#   {fecha}        fecha de publicación (AAAA-MM-DD)
+#   {fecha_larga}  fecha en palabras, ej. "viernes 30 de octubre"
+# En Niños, {lectura} es el nombre de la historia.
+series:
+  biblia:
+    activa: true
+    titulo: "Audio Biblia Día {dia_anio} - {lectura}"
+    descripcion: |
+      📖 Audio Biblia Día {dia_anio} — {fecha_larga}
+      Lectura de hoy: {lectura}
+
+      Comienza tu día con la Palabra de Dios 🙏
+
+      Disfruta esta lectura bíblica en audio, ideal para orar, meditar y fortalecer tu fe desde temprano. Permite que Dios hable a tu corazón mientras te preparas para el día.
+
+      📖 “Así que la fe es por el oír, y el oír, por la palabra de Dios.” (Romanos 10:17)
+      ⏰ Nuevo audio cada día — 6:00 AM
+      🎧 Perfecto para escuchar en casa, camino al trabajo o en tu tiempo devocional
+
+      Comparte esta bendición con tu familia y amigos 💛
+
+      Suscríbete para recibir la Biblia en audio diariamente ✨
+      Dios te bendiga 🙌
+
+      #AudioBiblia #BibliaEnAudio #DevocionalDiario #PalabraDeDios #Fe #Oración
+    para_ninos: false
+  proverbios:
+    activa: true
+    titulo: "{titulo}"
+    descripcion: |
+      📜 Proverbios {dia_mes} — {fecha_larga}
+      Un capítulo de Proverbios para cada día del mes: hoy, día {dia_mes}, leemos Proverbios {dia_mes}.
+
+      Comienza tu día con la sabiduría de la Palabra de Dios 🙏
+
+      Escucha este capítulo en audio, ideal para orar, meditar y pedirle a Dios sabiduría para las decisiones de hoy.
+
+      📖 “El principio de la sabiduría es el temor de Jehová.” (Proverbios 1:7)
+      ⏰ Nuevo audio cada día — 6:00 AM
+      🎧 Perfecto para escuchar en casa, camino al trabajo o en tu tiempo devocional
+
+      Comparte esta bendición con tu familia y amigos 💛
+
+      Suscríbete para recibir la Biblia en audio diariamente ✨
+      Dios te bendiga 🙌
+
+      #AudioBiblia #Proverbios #SabiduríaDeDios #DevocionalDiario #PalabraDeDios #Fe
+    para_ninos: false
+  ninos:
+    activa: true
+    titulo: "{titulo}"
+    descripcion: |
+      🧒 Audio Biblia Niños Día {dia_anio}: {lectura}
+
+      Una historia de la Biblia para los más pequeños 🙏
+
+      Escúchala en familia: ideal para la mañana, el camino a la escuela o antes de dormir. Ayuda a tus hijos a conocer a Dios y a amar Su Palabra desde pequeños.
+
+      📖 “Instruye al niño en su camino, y aun cuando fuere viejo no se apartará de él.” (Proverbios 22:6)
+      ⏰ Nueva historia cada día — 6:00 AM
+      🎧 Perfecto para escuchar en casa, en el auto o en el devocional familiar
+
+      Comparte esta bendición con otras familias 💛
+
+      Suscríbete para recibir la Biblia en audio diariamente ✨
+      Dios te bendiga 🙌
+
+      #AudioBibliaNiños #BibliaParaNiños #HistoriasBíblicas #AudioBiblia #PalabraDeDios
+    para_ninos: true   # YouTube exige marcar el contenido dirigido a niños
+
+descargas:
+  # Pausa al azar (segundos) antes de cada descarga, para que YouTube no lo tome como bot.
+  pausa_min: 8
+  pausa_max: 25
+  # Si YouTube sigue bloqueando ("confirma que no eres un bot"), usar las cookies de tu
+  # sesión de YouTube en el navegador: chrome, safari, firefox, edge o brave. Vacío = sin cookies.
+  cookies_navegador: ""
+
+youtube:
+  activo: true
+  # api    = sube y programa con la API de YouTube
+  # manual = solo descarga y deja una lista (data/youtube_manual.csv) para subir desde YouTube Studio
+  modo: api
+  categoria_id: "29"          # 29 = ONG y activismo, 22 = Gente y blogs
+  etiquetas: [audio biblia, biblia, palabra de dios]
+  # Tope de subidas por corrida. Si se acaba la cuota diaria de la API, el programa se
+  # detiene en YouTube y continúa en la siguiente corrida.
+  max_subidas_por_corrida: 30
+  # IDs de listas de reproducción (opcional), ej. PLxxxxxxxx
+  listas:
+    biblia: ""
+    proverbios: ""
+    ninos: ""
+
+facebook:
+  activo: true
+  graph_version: v23.0
+  # Facebook no deja programar demasiado adelante; lo que quede fuera se programa en la siguiente corrida.
+  max_dias_adelante: 28
+  # Las páginas se llenan con:  ./ab auth-facebook
+
+web:
+  # Dirección de la página pública (Vercel). Vacío = no enviar el calendario.
+  url: ""
+  # Página de Facebook cuyos videos se muestran en la web como alternativa a YouTube.
+  pagina_facebook: "Montaña De Dios"

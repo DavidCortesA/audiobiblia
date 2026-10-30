@@ -1,0 +1,8 @@
+# Títulos corregidos para videos de tu canal que se subieron con el título equivocado.
+# El programa usa estos títulos en lugar de los de YouTube (no cambia nada en YouTube).
+#
+# Formato:   ID_DEL_VIDEO: "título correcto"
+# El ID es lo que va después de youtu.be/ o de watch?v=
+#
+# Ejemplo (por confirmar escuchándolo: dura 13:41 y el Día 154 dura 12:39, y el Día 156 empieza en Juan 6:60):
+# zTBOMuHMaRM: "Audio Biblia Día 155 - 2 Samuel 24, Salmo 58:6-11, Proverbios 26:27 y Juan 6:25-59"

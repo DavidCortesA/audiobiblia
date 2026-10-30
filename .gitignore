@@ -1,0 +1,25 @@
+# Python
+.venv/
+__pycache__/
+
+# Privado: credenciales, configuración y estado de tu cuenta
+credenciales/
+config.yaml
+data/estado.json
+data/*.csv
+data/logs/
+data/panel.html
+# Cachés que se regeneran solas (son grandes)
+data/catalogo.json
+data/subidas_youtube.json
+
+# Descargas
+videos/
+descargas_drive/
+
+# Local
+.claude/
+.DS_Store
+web/.local/
+web/.env*
+!web/.env.example
