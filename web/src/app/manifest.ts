@@ -8,7 +8,7 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: SITIO.nombre,
     description: SITIO.descripcion,
     lang: "es-MX",
-    start_url: "/?app=1",
+    start_url: "/",
     scope: "/",
     display: "standalone",
     orientation: "portrait",
