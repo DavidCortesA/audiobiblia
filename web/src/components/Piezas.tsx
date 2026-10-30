@@ -55,9 +55,9 @@ export function Pie() {
           <div>
             <Image className="pie-logo" src="/img/logo-blanco.png" alt="Audio Biblia" width={900} height={265} style={{ height: "auto" }} />
             <p>
-              {SITIO.iglesia}
+              {SITIO.congregacion}
               <br />
-              {SITIO.ciudad}
+              {SITIO.iglesia} · {SITIO.ciudad}
             </p>
             {SITIO.contactoCorreo && (
               <p>

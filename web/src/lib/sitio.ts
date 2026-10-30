@@ -2,6 +2,7 @@ export const SITIO = {
   nombre: "Audio Biblia",
   nombreLargo: "Audio Biblia · Castillo del Rey",
   iglesia: "Castillo del Rey, A.R.",
+  congregacion: "Iglesia Montaña de Dios",
   ciudad: "Monterrey, México",
   url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://audiobiblia.vercel.app").replace(/\/$/, ""),
   descripcion:
@@ -16,7 +17,7 @@ export const SITIO = {
     nombre: "Montaña De Dios",
     paginaId: process.env.NEXT_PUBLIC_FACEBOOK_PAGE_ID ?? "590229140997160",
   },
-  contactoCorreo: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "",
+  contactoCorreo: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "castillodelreymdd@gmail.com",
 };
 
 export const SERIES = {

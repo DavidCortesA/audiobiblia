@@ -20,7 +20,7 @@ export default function Privacidad() {
       <div className="contenedor">
         <article className="texto-legal">
           <p>
-            Audio Biblia es un sitio de {SITIO.iglesia} ({SITIO.ciudad}) para escuchar la lectura diaria de la Biblia. No
+            Audio Biblia es un sitio de {SITIO.congregacion}, {SITIO.iglesia} ({SITIO.ciudad}), para escuchar la lectura diaria de la Biblia. No
             pedimos cuentas, nombres ni correos para usarlo.
           </p>
           <h2>Notificaciones</h2>
