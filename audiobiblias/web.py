@@ -58,6 +58,7 @@ def armar_feed(cfg, estado, hora_publicacion):
                 "descripcion": e.get("descripcion", ""),
                 "youtube": yt,
                 "facebook": e.get("facebook", {}).get(pagina["id"]) if pagina else None,
+                "audio": e.get("audio"),
             })
     return videos
 

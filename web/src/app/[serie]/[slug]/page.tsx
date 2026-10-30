@@ -100,6 +100,7 @@ export default async function PaginaVideo({ params }: PageProps<"/[serie]/[slug]
               facebook: video.facebook,
               miniatura: video.miniatura,
               fecha: video.fecha,
+              audio: video.audio ?? null,
             }}
           />
           <nav className="navegacion-videos" aria-label="Otros audios de la serie">

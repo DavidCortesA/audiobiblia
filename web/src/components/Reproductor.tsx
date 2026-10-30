@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { SERIES, SITIO, type Serie } from "@/lib/sitio";
 import { AccionesVideo } from "./AccionesVideo";
+import { ReproductorAudio, type PistaAudio } from "./ReproductorAudio";
 
 export interface VideoReproducible {
   slug: string;
@@ -16,9 +17,11 @@ export interface VideoReproducible {
   facebook: string | null;
   miniatura: string;
   fecha: string;
+  audio: string | null;
 }
 
-type Fuente = "youtube" | "facebook";
+type FuenteVideo = "youtube" | "facebook";
+type Fuente = "audio" | FuenteVideo;
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 function urlFacebook(id: string) {
@@ -26,7 +29,7 @@ function urlFacebook(id: string) {
 }
 
 /** Video con portada; el iframe (YouTube o Facebook) solo se carga al dar play. */
-export function MarcoVideo({ video, fuente }: { video: VideoReproducible; fuente: Fuente }) {
+export function MarcoVideo({ video, fuente }: { video: VideoReproducible; fuente: FuenteVideo }) {
   const [activo, setActivo] = useState(false);
   const usarFacebook = fuente === "facebook" && video.facebook;
 
@@ -65,8 +68,17 @@ export function SelectorFuente({
   return (
     <>
       <div className="fuente">
-        <span>Ver desde</span>
-        <div className="fuente-opciones" role="group" aria-label="Fuente del video">
+        <span>Escuchar en</span>
+        <div className="fuente-opciones" role="group" aria-label="Cómo escuchar">
+          <button
+            type="button"
+            aria-pressed={fuente === "audio"}
+            disabled={!video.audio}
+            title={video.audio ? "Sigue sonando con la pantalla apagada" : "Este audio solo está en video"}
+            onClick={() => onCambio("audio")}
+          >
+            Audio
+          </button>
           <button type="button" aria-pressed={fuente === "youtube"} onClick={() => onCambio("youtube")}>
             YouTube
           </button>
@@ -97,27 +109,61 @@ export function SelectorFuente({
   );
 }
 
-/** Reproductor de "hoy": video grande + pestañas por serie. */
+/** Audio si existe; si no, el video de YouTube. */
+function fuenteReal(video: VideoReproducible, elegida: Fuente): Fuente {
+  return elegida === "audio" && !video.audio ? "youtube" : elegida;
+}
+
+function pista(v: VideoReproducible): PistaAudio {
+  return { slug: v.slug, serie: v.serie, titulo: v.titulo, lectura: v.lectura, miniatura: v.miniatura, audio: v.audio! };
+}
+
+/** Reproductor de "hoy": audio/video grande + pestañas por serie. Al terminar un audio sigue con el siguiente. */
 export function Reproductor({ videos, etiqueta }: { videos: VideoReproducible[]; etiqueta: string }) {
   const [serie, setSerie] = useState<Serie>(videos[0].serie);
-  const [fuente, setFuente] = useState<Fuente>("youtube");
-  const video = videos.find((v) => v.serie === serie) ?? videos[0];
+  const [elegida, setElegida] = useState<Fuente>("audio");
+  const [seguir, setSeguir] = useState(false);
+  const indice = Math.max(0, videos.findIndex((v) => v.serie === serie));
+  const video = videos[indice];
+  const fuente = fuenteReal(video, elegida);
+
+  const conAudio = (desde: number, paso: 1 | -1) => {
+    for (let i = desde + paso; i >= 0 && i < videos.length; i += paso) if (videos[i].audio) return videos[i];
+    return null;
+  };
+  const siguiente = conAudio(indice, 1);
+  const anterior = conAudio(indice, -1);
 
   return (
     <div className="hoy-grid">
       <div className="hoy-video">
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={`${video.slug}-${fuente}`}
-            style={{ position: "absolute", inset: 0 }}
-            initial={{ opacity: 0, scale: 1.02 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.45, ease: EASE }}
-          >
-            <MarcoVideo video={video} fuente={fuente} />
-          </motion.div>
-        </AnimatePresence>
+        {fuente === "audio" ? (
+          <ReproductorAudio
+            pista={pista(video)}
+            autoReproducir={seguir}
+            alTerminar={() => {
+              if (siguiente) {
+                setSerie(siguiente.serie);
+                setSeguir(true);
+              }
+            }}
+            alSiguiente={siguiente ? () => (setSerie(siguiente.serie), setSeguir(true)) : undefined}
+            alAnterior={anterior ? () => (setSerie(anterior.serie), setSeguir(true)) : undefined}
+          />
+        ) : (
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={`${video.slug}-${fuente}`}
+              style={{ position: "absolute", inset: 0 }}
+              initial={{ opacity: 0, scale: 1.02 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.45, ease: EASE }}
+            >
+              <MarcoVideo video={video} fuente={fuente} />
+            </motion.div>
+          </AnimatePresence>
+        )}
       </div>
       <div className="hoy-panel">
         <span className="ceja">{etiqueta}</span>
@@ -129,7 +175,10 @@ export function Reproductor({ videos, etiqueta }: { videos: VideoReproducible[];
               role="tab"
               aria-selected={v.serie === serie}
               className="pestana-serie"
-              onClick={() => setSerie(v.serie)}
+              onClick={() => {
+                setSerie(v.serie);
+                setSeguir(false);
+              }}
             >
               {v.serie === serie && (
                 <motion.span layoutId="fondo-activo" className="fondo-activo" transition={{ duration: 0.5, ease: EASE }} />
@@ -139,8 +188,9 @@ export function Reproductor({ videos, etiqueta }: { videos: VideoReproducible[];
             </button>
           ))}
         </div>
+        {fuente === "audio" && siguiente && <p className="hoy-siguiente">Al terminar sigue: {SERIES[siguiente.serie].nombre}</p>}
         <AccionesVideo video={datosAccion(video)} tema="oscuro" />
-        <SelectorFuente video={video} fuente={fuente} onCambio={setFuente} />
+        <SelectorFuente video={video} fuente={fuente} onCambio={setElegida} />
       </div>
     </div>
   );
@@ -150,17 +200,18 @@ function datosAccion(v: VideoReproducible) {
   return { slug: v.slug, serie: v.serie, titulo: v.titulo, lectura: v.lectura, miniatura: v.miniatura, fecha: v.fecha };
 }
 
-/** Para la página de un video: solo el marco y la elección de fuente. */
+/** Para la página de un video: el reproductor y la elección de fuente. */
 export function ReproductorUnico({ video }: { video: VideoReproducible }) {
-  const [fuente, setFuente] = useState<Fuente>("youtube");
+  const [elegida, setElegida] = useState<Fuente>("audio");
+  const fuente = fuenteReal(video, elegida);
   return (
     <>
       <div className="marco">
-        <MarcoVideo key={fuente} video={video} fuente={fuente} />
+        {fuente === "audio" ? <ReproductorAudio pista={pista(video)} /> : <MarcoVideo key={fuente} video={video} fuente={fuente} />}
       </div>
       <div className="fuente-clara" style={{ marginTop: 16, display: "grid", gap: 14 }}>
         <AccionesVideo video={datosAccion(video)} />
-        <SelectorFuente video={video} fuente={fuente} onCambio={setFuente} />
+        <SelectorFuente video={video} fuente={fuente} onCambio={setElegida} />
       </div>
     </>
   );

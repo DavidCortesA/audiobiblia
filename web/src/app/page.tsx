@@ -85,8 +85,8 @@ export default async function Inicio() {
           {delDia.length ? (
             <Reproductor
               etiqueta={esHoy ? `Hoy · ${fechaLarga(hoy)}` : `Lo más reciente · ${fechaLarga(delDia[0].fecha)}`}
-              videos={delDia.map(({ slug, serie, titulo, lectura, youtube, facebook, miniatura, fecha }) => ({
-                slug, serie, titulo, lectura, youtube, facebook, miniatura, fecha,
+              videos={delDia.map(({ slug, serie, titulo, lectura, youtube, facebook, miniatura, fecha, audio }) => ({
+                slug, serie, titulo, lectura, youtube, facebook, miniatura, fecha, audio: audio ?? null,
               }))}
             />
           ) : (

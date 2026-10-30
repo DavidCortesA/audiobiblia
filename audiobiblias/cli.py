@@ -7,7 +7,7 @@ import sys
 from datetime import date, datetime, timedelta
 from zoneinfo import ZoneInfo
 
-from . import catalogo, descarga, facebook, panel, seleccion, web, youtube
+from . import audio, catalogo, descarga, facebook, panel, seleccion, web, youtube
 from .config import DATA, SERIES, cargar_config, guardar_json, leer_json
 
 ESTADO = DATA / "estado.json"
@@ -321,7 +321,13 @@ def cmd_web_sync(cfg, args):
     if not (args.url or args.local or cfg.get("web", {}).get("url")):
         print("web.url está vacío en config.yaml; no se envía el calendario a la página.")
         return
-    videos = web.armar_feed(cfg, cargar_estado(), hora_publicacion)
+    estado = cargar_estado()
+    try:
+        subidos, borrados = audio.sincronizar(cfg, estado, ESTADO)
+        print(f"Audios: {subidos} subidos, {borrados} borrados (más de 30 días).")
+    except Exception as e:  # sin token o sin internet: la página usa el video de YouTube
+        print(f"⚠ No se pudieron preparar los audios ({e}).")
+    videos = web.armar_feed(cfg, estado, hora_publicacion)
     try:
         subidas = web.actualizar_subidas()
     except Exception as e:  # sin YouTube autorizado o sin internet: se usa lo que ya había
