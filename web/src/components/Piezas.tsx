@@ -85,8 +85,9 @@ export function Pie() {
           <div>
             <h2>Sitio</h2>
             <ul>
+              <li><Link href="/buscar">Buscar</Link></li>
               <li><Link href="/favoritos">Mi espacio</Link></li>
-              <li><Link href="/avisos">Avisos y app</Link></li>
+              <li><Link href="/avisos">Ajustes y avisos</Link></li>
               <li><Link href="/privacidad">Privacidad</Link></li>
               <li><Link href="/terminos">Términos de uso</Link></li>
             </ul>

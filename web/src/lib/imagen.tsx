@@ -70,7 +70,8 @@ export async function imagenVideo(video: Video, ancho: number, alto: number) {
   const vertical = alto > ancho;
   const { grande, chico } = textos(video);
   const escala = vertical ? 1.25 : 1;
-  const tamGrande = Math.round((grande.length > 22 ? 72 : grande.length > 14 ? 88 : 104) * escala);
+  // En mayúsculas Josefin ocupa ~0.62 em por letra: que quepa en una o dos líneas sin empujar el logo.
+  const tamGrande = Math.round((grande.length > 22 ? 60 : grande.length > 16 ? 72 : grande.length > 10 ? 88 : 104) * escala);
   const dia = video.serie === "proverbios" ? "" : ` · Día ${video.dia}`;
 
   return new ImageResponse(
@@ -91,9 +92,15 @@ export async function imagenVideo(video: Video, ancho: number, alto: number) {
             width: ancho,
             height: alto,
             display: "flex",
-            background: vertical
-              ? "linear-gradient(180deg, rgba(14,26,19,0.55) 0%, rgba(14,26,19,0.15) 30%, rgba(14,26,19,0.85) 62%, #0e1a13 100%)"
-              : "linear-gradient(90deg, rgba(14,26,19,0.92) 0%, rgba(14,26,19,0.7) 48%, rgba(14,26,19,0.15) 100%)",
+            // Proverbios: velo más ligero para que se vean las nubes rosadas.
+            background:
+              video.serie === "proverbios"
+                ? vertical
+                  ? "linear-gradient(180deg, rgba(14,26,19,0.3) 0%, rgba(14,26,19,0) 28%, rgba(14,26,19,0.45) 60%, rgba(14,26,19,0.82) 100%)"
+                  : "linear-gradient(90deg, rgba(14,26,19,0.72) 0%, rgba(14,26,19,0.35) 50%, rgba(14,26,19,0) 100%)"
+                : vertical
+                  ? "linear-gradient(180deg, rgba(14,26,19,0.55) 0%, rgba(14,26,19,0.15) 30%, rgba(14,26,19,0.85) 62%, #0e1a13 100%)"
+                  : "linear-gradient(90deg, rgba(14,26,19,0.92) 0%, rgba(14,26,19,0.7) 48%, rgba(14,26,19,0.15) 100%)",
           }}
         />
         <div

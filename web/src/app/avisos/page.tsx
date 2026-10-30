@@ -1,14 +1,16 @@
-import { Bell, Heart, Mail, Smartphone } from "lucide-react";
+import { Bell, Heart, Mail, Palette, Smartphone } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Apariencia } from "@/components/Apariencia";
 import { BotonAvisos } from "@/components/BotonAvisos";
 import { InstalarApp } from "@/components/InstalarApp";
+import { PreferenciasAvisos } from "@/components/PreferenciasAvisos";
 import { Revelar } from "@/components/Movimiento";
 import { SITIO } from "@/lib/sitio";
 
 export const metadata: Metadata = {
-  title: "Avisos y app",
-  description: "Activa o desactiva el aviso de las 6:00 con los audios del día e instala Audio Biblia en tu celular.",
+  title: "Ajustes",
+  description: "Avisos de los audios del día, modo oscuro, tamaño de letra e instalar Audio Biblia en tu celular.",
   alternates: { canonical: "/avisos" },
 };
 
@@ -19,7 +21,7 @@ export default function Avisos() {
         <div className="contenedor">
           <span className="ceja">Ajustes</span>
           <h1 className="titulo-l" style={{ marginTop: 16 }}>
-            Avisos <span className="serif-it">y app</span>
+            Tus <span className="serif-it">ajustes</span>
           </h1>
         </div>
       </section>
@@ -33,6 +35,16 @@ export default function Avisos() {
               Proverbio y la historia de los niños. Puedes desactivarla aquí cuando quieras.
             </p>
             <BotonAvisos variante="oscuro" />
+            <PreferenciasAvisos />
+          </div>
+        </Revelar>
+
+        <Revelar className="ajuste" retraso={0.04}>
+          <div className="ajuste-icono" aria-hidden="true"><Palette size={24} /></div>
+          <div>
+            <h2>Apariencia</h2>
+            <p>Modo oscuro para la noche y letra más grande para leer cómodo.</p>
+            <Apariencia />
           </div>
         </Revelar>
 

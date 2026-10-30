@@ -1,5 +1,5 @@
 import webpush, { type PushSubscription } from "web-push";
-import { listarSuscripciones, quitarSuscripcion } from "./almacen";
+import { quitarSuscripcion, type Suscriptor } from "./almacen";
 import { SITIO } from "./sitio";
 
 const publica = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
@@ -30,24 +30,25 @@ export async function avisarA(sub: PushSubscription, aviso: Aviso) {
   }
 }
 
-/** Envía el aviso a todos los suscriptores y limpia los que ya no existen. */
-export async function avisarATodos(aviso: Aviso) {
-  const subs = await listarSuscripciones();
+/** Envía a cada suscriptor su propio aviso (o ninguno) y limpia los que ya no existen. */
+export async function avisarA_cada(suscriptores: Suscriptor[], armar: (s: Suscriptor) => Aviso | null) {
   let enviados = 0;
   let borrados = 0;
   await Promise.all(
-    subs.map(async (sub: PushSubscription) => {
+    suscriptores.map(async (s) => {
+      const aviso = armar(s);
+      if (!aviso) return;
       try {
-        await webpush.sendNotification(sub, JSON.stringify(aviso), { TTL: 60 * 60 * 12, urgency: "normal" });
+        await webpush.sendNotification(s.sub, JSON.stringify(aviso), { TTL: 60 * 60 * 12, urgency: "normal" });
         enviados++;
       } catch (e) {
         const estado = (e as { statusCode?: number }).statusCode;
         if (estado === 404 || estado === 410) {
-          await quitarSuscripcion(sub.endpoint);
+          await quitarSuscripcion(s.sub.endpoint);
           borrados++;
         }
       }
     }),
   );
-  return { suscriptores: subs.length, enviados, borrados };
+  return { suscriptores: suscriptores.length, enviados, borrados };
 }

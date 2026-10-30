@@ -1,4 +1,5 @@
-import { avisarATodos, pushConfigurado } from "@/lib/push";
+import { listarSuscriptores } from "@/lib/almacen";
+import { avisarA_cada, pushConfigurado } from "@/lib/push";
 
 /** Manda un aviso de prueba a todos los suscriptores. Protegido con CRON_SECRET. */
 export async function POST(request: Request) {
@@ -8,11 +9,11 @@ export async function POST(request: Request) {
   }
   if (!pushConfigurado) return Response.json({ error: "faltan las llaves VAPID" }, { status: 500 });
   const cuerpo = (await request.json().catch(() => ({}))) as { title?: string; body?: string };
-  const resultado = await avisarATodos({
+  const resultado = await avisarA_cada(await listarSuscriptores(), () => ({
     title: cuerpo.title ?? "Audio Biblia · prueba",
     body: cuerpo.body ?? "Si ves este aviso, las notificaciones funcionan. 🙏",
     url: "/",
     tag: "prueba",
-  });
+  }));
   return Response.json({ ok: true, ...resultado });
 }

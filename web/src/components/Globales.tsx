@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Baby, Bell, BookHeart, BookOpen, Menu, Play, ScrollText, Sunrise, X } from "lucide-react";
+import { Baby, BookHeart, BookOpen, Menu, Play, ScrollText, Search, Settings, Sunrise, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { BotonAvisos } from "./BotonAvisos";
@@ -45,9 +45,15 @@ export function Encabezado() {
               {texto}
             </Link>
           ))}
+          <Link href="/buscar" aria-current={ruta === "/buscar" ? "page" : undefined} aria-label="Buscar">
+            <Search size={18} aria-hidden="true" />
+          </Link>
         </nav>
-        <Link href="/avisos" className="boton-icono solo-app" aria-label="Avisos y ajustes">
-          <Bell size={22} strokeWidth={1.8} aria-hidden="true" />
+        <Link href="/buscar" className="boton-icono solo-app" aria-label="Buscar">
+          <Search size={22} strokeWidth={1.8} aria-hidden="true" />
+        </Link>
+        <Link href="/avisos" className="boton-icono boton-icono-2 solo-app" aria-label="Ajustes">
+          <Settings size={22} strokeWidth={1.8} aria-hidden="true" />
         </Link>
         <button
           type="button"
@@ -79,7 +85,7 @@ export function Encabezado() {
               animate="visible"
               variants={{ visible: { transition: { staggerChildren: 0.07, delayChildren: 0.08 } } }}
             >
-              {[["/", "Inicio", "Los audios de hoy"] as const, ...ENLACES, ["/favoritos", "Mi espacio", "Tu progreso y tus guardados"] as const, ["/avisos", "Avisos", "Activar o desactivar las notificaciones"] as const].map(([href, texto, sub]) => (
+              {[["/", "Inicio", "Los audios de hoy"] as const, ...ENLACES, ["/buscar", "Buscar", "Por libro, capítulo o historia"] as const, ["/favoritos", "Mi espacio", "Tu progreso y tus guardados"] as const, ["/avisos", "Ajustes", "Avisos, modo oscuro y tamaño de letra"] as const].map(([href, texto, sub]) => (
                 <motion.li
                   key={href}
                   variants={{ oculto: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } } }}
@@ -93,7 +99,7 @@ export function Encabezado() {
             </motion.ul>
             <div className="menu-pie">
               <Link href="/avisos" onClick={() => setAbierto(false)} className="boton boton-sol">
-                Avisos y app
+                Ajustes y avisos
               </Link>
               <p>
                 <Link href="/privacidad" onClick={() => setAbierto(false)}>Privacidad</Link> ·{" "}

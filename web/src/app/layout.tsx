@@ -28,8 +28,9 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-// Atributo propio (no clase): React no lo reescribe al hidratar <html>.
-const DETECTAR_APP = `try{if(matchMedia("(display-mode: standalone)").matches||navigator.standalone===true)document.documentElement.setAttribute("data-modo","app")}catch(e){}`;
+// Atributos propios (no clase): React no los reescribe al hidratar <html>. También aplica
+// el tema y el tamaño de letra guardados, antes de pintar, para que no parpadee.
+const DETECTAR_APP = `try{var d=document.documentElement;if(matchMedia("(display-mode: standalone)").matches||navigator.standalone===true)d.setAttribute("data-modo","app");var t=localStorage.getItem("tema"),l=localStorage.getItem("letra");if(t)d.setAttribute("data-tema",t);if(l)d.setAttribute("data-letra",l)}catch(e){}`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
