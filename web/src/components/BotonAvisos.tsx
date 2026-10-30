@@ -33,7 +33,7 @@ export function esInstalada() {
 }
 
 const MENSAJES: Partial<Record<Estado, string>> = {
-  suscrito: "✓ Recibirás un aviso cada mañana cuando salgan los audios.",
+  suscrito: "✓ Avisos activados en este dispositivo. Te llegará uno cada mañana a las 6:00.",
   denegado: "Bloqueaste las notificaciones. Actívalas en los ajustes del navegador para este sitio.",
   "no-soportado": "Este navegador no permite notificaciones. Prueba con Chrome, Edge, Firefox o Safari.",
   "ios-instalar": "En iPhone, primero agrega la app a tu pantalla de inicio (Compartir → Agregar a inicio) y ábrela desde ahí.",
@@ -136,7 +136,7 @@ export function BotonAvisos({ variante = "sol", compacto = false }: { variante?:
   if (compacto) {
     if (estado === "suscrito") return null;
     return (
-      <Link className={clase} href="/#app">
+      <Link className={clase} href="/avisos">
         <Campana /> Avisos 6:00
       </Link>
     );
@@ -145,7 +145,13 @@ export function BotonAvisos({ variante = "sol", compacto = false }: { variante?:
   return (
     <div>
       {estado === "suscrito" ? (
-        <button type="button" className="boton boton-fantasma" onClick={desactivar}>
+        <button
+          type="button"
+          className={`boton ${variante === "oscuro" ? "boton-contorno" : "boton-fantasma"}`}
+          onClick={() => {
+            if (window.confirm("¿Desactivar el aviso de las 6:00 en este dispositivo?")) desactivar();
+          }}
+        >
           Desactivar avisos
         </button>
       ) : (

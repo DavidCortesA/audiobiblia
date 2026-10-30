@@ -70,7 +70,7 @@ export default async function Inicio() {
                 <a className="boton boton-sol" href="#hoy">
                   ▶ Escuchar el audio de hoy
                 </a>
-                <a className="boton boton-fantasma" href="#app">
+                <a className="boton boton-fantasma solo-web" href="#app">
                   Recibir avisos
                 </a>
               </div>
@@ -136,7 +136,7 @@ export default async function Inicio() {
         </div>
       </section>
 
-      <section className="seccion app" id="app" aria-labelledby="titulo-app">
+      <section className="seccion app solo-web" id="app" aria-labelledby="titulo-app">
         <div className="contenedor app-grid">
           <Revelar>
             <span className="ceja">App y avisos</span>

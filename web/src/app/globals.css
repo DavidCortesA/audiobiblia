@@ -84,6 +84,8 @@ button { font: inherit; }
 .boton-fantasma:hover { box-shadow: inset 0 0 0 1.5px var(--texto-claro); }
 .boton-oscuro { background: var(--bosque); color: var(--crema); }
 .boton-oscuro:hover { background: var(--bosque-2); }
+.boton-contorno { background: transparent; color: var(--tinta); box-shadow: inset 0 0 0 1.5px var(--linea); }
+.boton-contorno:hover { box-shadow: inset 0 0 0 1.5px var(--tinta); }
 .boton-chico { min-height: 40px; padding: 0 18px; font-size: 13px; }
 .girando { width: 16px; height: 16px; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; animation: girar 0.8s linear infinite; }
 @keyframes girar { to { transform: rotate(360deg); } }
@@ -192,7 +194,7 @@ button { font: inherit; }
 .enlaces-externos { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 14px; }
 .enlaces-externos a { white-space: nowrap; }
 .enlaces-externos a { color: var(--sol-claro); text-underline-offset: 3px; }
-@media (max-width: 900px) {
+@media (max-width: 760px) {
   .hoy-grid { grid-template-columns: 1fr; }
   .hoy { padding-bottom: 64px; }
 }
@@ -235,7 +237,7 @@ button { font: inherit; }
 .serie-bloque p { color: var(--tinta-suave); }
 .serie-bloque .ver-todo { font-family: var(--f-display); font-weight: 700; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--tinta); text-underline-offset: 6px; }
 .serie-bloque .rejilla-videos { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-@media (max-width: 900px) {
+@media (max-width: 760px) {
   .serie-bloque { grid-template-columns: 1fr; gap: 24px; }
   .serie-bloque .rejilla-videos { grid-template-columns: repeat(3, 72%); overflow-x: auto; scroll-snap-type: x mandatory; }
   .serie-bloque .tarjeta { scroll-snap-align: start; }
@@ -255,7 +257,7 @@ button { font: inherit; }
 .estado-avisos { font-size: 15px; margin: 12px 0 0; min-height: 1.6em; }
 .estado-avisos.error { color: #ffb4a0; }
 .estado-avisos.ok { color: var(--sol-claro); }
-@media (max-width: 900px) { .app-grid { grid-template-columns: 1fr; } }
+@media (max-width: 760px) { .app-grid { grid-template-columns: 1fr; } }
 
 /* Página de serie / video */
 .cabeza-pagina { background: var(--noche); color: var(--texto-claro); padding: calc(140px + env(safe-area-inset-top)) 0 72px; position: relative; overflow: hidden; }
@@ -275,7 +277,7 @@ button { font: inherit; }
 .fuente-clara .fuente-opciones button { color: var(--tinta-suave); }
 .fuente-clara .fuente-opciones button[aria-pressed="true"] { background: var(--bosque); color: var(--crema); }
 .fuente-clara .enlaces-externos a { color: var(--brasa); }
-@media (max-width: 900px) { .video-pagina { grid-template-columns: 1fr; gap: 28px; } }
+@media (max-width: 760px) { .video-pagina { grid-template-columns: 1fr; gap: 28px; } }
 
 /* Encabezado de serie con contador */
 .cabeza-serie { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 40px; align-items: end; }
@@ -340,3 +342,63 @@ button { font: inherit; }
 .no-encontrado p { color: var(--texto-claro-suave); max-width: 40ch; margin: 16px auto 28px; }
 
 .vacio { padding: 40px; border: 1px dashed var(--linea); border-radius: var(--radio); text-align: center; color: var(--tinta-suave); }
+
+/* ========== Tablet (iPad y similares) ========== */
+@media (min-width: 761px) and (max-width: 1100px) {
+  .hoy-grid { grid-template-columns: 1fr; }
+  .hoy-panel { padding: 22px 24px 26px; }
+  .pestanas-serie { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .pestana-serie .lectura { font-size: 15px; }
+  .fuente { margin-top: 4px; }
+  .serie-bloque { grid-template-columns: minmax(0, 0.75fr) minmax(0, 2fr); gap: 32px; }
+  .video-pagina { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 32px; }
+  .mes-proverbios { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+}
+
+/* ========== Avisos y app ========== */
+.cabeza-compacta { padding-bottom: 48px; }
+.ajustes { display: grid; gap: 16px; max-width: 760px; padding-top: 40px; padding-bottom: 96px; }
+.ajuste { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 16px; background: var(--crema); border-radius: var(--radio); padding: 24px; }
+.ajuste-icono { width: 52px; height: 52px; border-radius: 14px; background: var(--papel); display: grid; place-items: center; font-size: 24px; }
+.ajuste h2 { font-family: var(--f-display); font-size: 22px; margin: 4px 0 6px; }
+.ajuste p { margin: 0 0 16px; color: var(--tinta-suave); }
+.ajuste .estado-avisos { margin: 12px 0 0; color: var(--tinta-suave); }
+.ajuste .estado-avisos.ok { color: var(--musgo); }
+.ajuste .estado-avisos.error { color: var(--brasa); }
+.ajuste-enlaces { font-size: 15px; }
+.ajuste-enlaces a { color: var(--brasa); }
+@media (max-width: 480px) { .ajuste { grid-template-columns: 1fr; } }
+
+/* ========== Modo app (instalada en el celular, tablet o computadora) ========== */
+.solo-app, .barra-app { display: none; }
+.modo-app .solo-web { display: none !important; }
+.modo-app .barra-movil, .modo-app .pie, .modo-app .boton-menu, .modo-app .nav-escritorio { display: none; }
+.modo-app body { padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
+.modo-app .hero { min-height: 0; }
+.modo-app .hero-contenido { padding-top: calc(104px + env(safe-area-inset-top)); padding-bottom: clamp(130px, 18vh, 180px); }
+.modo-app .hero-texto, .modo-app .hero-acciones { display: none; }
+.modo-app .hero h1 { font-size: clamp(40px, 11vw, 80px); }
+.modo-app .cabeza-pagina { padding-top: calc(100px + env(safe-area-inset-top)); }
+.modo-app .aviso-cookies { bottom: calc(96px + env(safe-area-inset-bottom)); }
+.modo-app .barra-app {
+  display: flex; position: fixed; z-index: 45; left: 0; right: 0; bottom: 0;
+  padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+  background: rgba(14, 26, 19, 0.94); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--linea-clara);
+}
+.barra-app a {
+  position: relative; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 2px 6px;
+  border-radius: 14px; text-decoration: none; color: var(--texto-claro-suave);
+  font-family: var(--f-display); font-weight: 600; font-size: 11px; letter-spacing: 0.06em;
+  -webkit-tap-highlight-color: transparent;
+}
+.barra-app a > * { position: relative; z-index: 1; }
+.barra-app a[aria-current="page"] { color: var(--noche); }
+.barra-app .pestana-fondo { position: absolute; inset: 0; z-index: 0; border-radius: inherit; background: var(--sol); }
+@media (min-width: 761px) {
+  .modo-app .barra-app {
+    left: 50%; right: auto; bottom: calc(16px + env(safe-area-inset-bottom)); transform: translateX(-50%);
+    width: min(560px, calc(100% - 32px)); padding: 8px; border-radius: 22px; border: 1px solid var(--linea-clara); box-shadow: var(--sombra);
+  }
+  .modo-app body { padding-bottom: 110px; }
+}

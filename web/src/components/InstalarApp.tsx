@@ -9,7 +9,7 @@ interface EventoInstalar extends Event {
 }
 
 /** Botón "Instalar" en Android/Chrome; instrucciones en iPhone; nada si ya está instalada. */
-export function InstalarApp() {
+export function InstalarApp({ claro = false }: { claro?: boolean }) {
   const [evento, setEvento] = useState<EventoInstalar | null>(null);
   const [modo, setModo] = useState<"revisando" | "android" | "ios" | "instalada" | "otro">("revisando");
 
@@ -31,12 +31,13 @@ export function InstalarApp() {
     };
   }, []);
 
-  if (modo === "instalada") return <p className="estado-avisos ok">✓ Ya tienes la app instalada en este dispositivo.</p>;
+  // Ya instalada: no hay nada que ofrecer.
+  if (modo === "instalada") return null;
   if (modo === "android" && evento)
     return (
       <button
         type="button"
-        className="boton boton-fantasma"
+        className={`boton ${claro ? "boton-oscuro" : "boton-fantasma"}`}
         onClick={async () => {
           await evento.prompt();
           const { outcome } = await evento.userChoice;

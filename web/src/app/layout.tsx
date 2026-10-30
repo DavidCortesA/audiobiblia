@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Josefin_Sans, Literata } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
-import { AvisoCookies, BarraMovil, Encabezado, RegistrarServiceWorker } from "@/components/Globales";
+import { AvisoCookies, BarraApp, BarraMovil, Encabezado, RegistrarServiceWorker } from "@/components/Globales";
 import { ProveedorMovimiento } from "@/components/Movimiento";
 import { Pie } from "@/components/Piezas";
 import { SITIO } from "@/lib/sitio";
@@ -28,9 +28,15 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
+const DETECTAR_APP = `try{if(matchMedia("(display-mode: standalone)").matches||navigator.standalone===true)document.documentElement.classList.add("modo-app")}catch(e){}`;
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="es-MX" className={`${josefin.variable} ${literata.variable}`}>
+    <html lang="es-MX" className={`${josefin.variable} ${literata.variable}`} suppressHydrationWarning>
+      <head>
+        {/* Antes de pintar: si se abrió como app instalada, activa el modo app (sin parpadeo). */}
+        <script dangerouslySetInnerHTML={{ __html: DETECTAR_APP }} />
+      </head>
       <body>
         <ProveedorMovimiento>
           <a className="solo-lectores" href="#contenido">
@@ -40,6 +46,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <main id="contenido">{children}</main>
           <Pie />
           <BarraMovil />
+          <BarraApp />
           <AvisoCookies />
         </ProveedorMovimiento>
         <RegistrarServiceWorker />

@@ -17,7 +17,7 @@ export default function Suscrito() {
         </h1>
         <p>
           Cada mañana te llegará un aviso con la lectura de la Biblia, el Proverbio del día y la historia de los niños.
-          Puedes desactivarlo cuando quieras desde la sección de la app.
+          Puedes desactivarlo cuando quieras en <Link href="/avisos">Avisos</Link>.
         </p>
         <Link className="boton boton-sol" href="/#hoy">
           Escuchar la lectura de hoy
