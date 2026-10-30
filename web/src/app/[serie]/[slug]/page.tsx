@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BotonAvisos } from "@/components/BotonAvisos";
+import { LecturaBiblica } from "@/components/LecturaBiblica";
 import { Revelar } from "@/components/Movimiento";
 import { ReproductorUnico } from "@/components/Reproductor";
 import { getCatalogo, getVideo, partesLectura } from "@/lib/datos";
@@ -32,9 +33,18 @@ export async function generateMetadata({ params }: PageProps<"/[serie]/[slug]">)
   if (!datos) return { title: "Audio no encontrado" };
   const { video } = datos;
   const [principal] = partesLectura(video.lectura);
-  const titulo = serie === "biblia" ? `${principal} — Audio Biblia Día ${video.dia}` : video.titulo;
+  const titulo =
+    serie === "biblia"
+      ? `${principal} — Audio Biblia Día ${video.dia} en audio`
+      : serie === "ninos"
+        ? `${video.lectura} — Audio Biblia Niños Día ${video.dia}`
+        : `${video.lectura} en audio — Proverbios del día`;
   const descripcion = resumen(
-    `${SERIES[serie].nombre}, ${fechaLarga(video.fecha)}: ${video.lectura}. ${video.descripcion}`,
+    serie === "biblia"
+      ? `Escucha la lectura bíblica del ${fechaLarga(video.fecha)}: ${video.lectura}. Audio y texto de la Biblia, Día ${video.dia} del plan para leer la Biblia en un año.`
+      : serie === "ninos"
+        ? `“${video.lectura}”: historia de la Biblia para niños en audio, Día ${video.dia}. Para escuchar en familia, ${fechaLarga(video.fecha)}.`
+        : `Escucha y lee ${video.lectura} en audio: el Proverbio del día (${fechaLarga(video.fecha)}). Sabiduría de la Biblia para tus decisiones de hoy.`,
   );
   return {
     title: titulo,
@@ -56,6 +66,15 @@ export default async function PaginaVideo({ params }: PageProps<"/[serie]/[slug]
   if (!datos) notFound();
   const { video, anterior, siguiente } = datos;
 
+  const migas = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Inicio", item: SITIO.url },
+      { "@type": "ListItem", position: 2, name: SERIES[serie].nombre, item: `${SITIO.url}/${serie}` },
+      { "@type": "ListItem", position: 3, name: video.lectura, item: `${SITIO.url}/${serie}/${slug}` },
+    ],
+  };
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "VideoObject",
@@ -72,6 +91,7 @@ export default async function PaginaVideo({ params }: PageProps<"/[serie]/[slug]
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(migas) }} />
       <section className="cabeza-pagina" style={{ paddingBottom: 48 }}>
         <div className="contenedor">
           <Revelar>
@@ -124,11 +144,21 @@ export default async function PaginaVideo({ params }: PageProps<"/[serie]/[slug]
           </span>
           <p className="lectura-grande">{video.lectura}</p>
           <p className="video-descripcion">{video.descripcion}</p>
+          {serie !== "ninos" && (
+            <a className="ver-lectura" href="#lectura">
+              Leer el texto de la lectura ↓
+            </a>
+          )}
           <div style={{ marginTop: 32 }}>
             <BotonAvisos variante="oscuro" />
           </div>
         </aside>
       </div>
+      {serie !== "ninos" && (
+        <div className="contenedor">
+          <LecturaBiblica lectura={video.lectura} />
+        </div>
+      )}
     </>
   );
 }

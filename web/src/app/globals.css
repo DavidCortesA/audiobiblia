@@ -231,6 +231,14 @@ button { font: inherit; }
   .hoy { padding-bottom: 64px; }
 }
 
+.aviso-hoy {
+  display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px; padding: 14px 18px; border-radius: var(--radio-chico);
+  background: rgba(242, 165, 65, 0.16); border: 1px solid rgba(242, 165, 65, 0.45); color: var(--texto-claro); position: relative; z-index: 1;
+}
+.aviso-hoy svg { color: var(--sol); flex-shrink: 0; margin-top: 2px; }
+.aviso-hoy b { display: block; font-family: var(--f-display); font-size: 16px; }
+.aviso-hoy span { font-size: 14px; color: var(--texto-claro-suave); }
+
 /* ========== Secciones ========== */
 .seccion { padding: clamp(64px, 10vw, 120px) 0; }
 .seccion-cabeza { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr); gap: 32px; align-items: end; margin-bottom: 48px; }
@@ -441,6 +449,30 @@ button { font: inherit; }
 .accion-aviso { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; opacity: 0.85; }
 .acciones-oscuro .accion-aviso { color: var(--sol-claro); }
 .acciones-claro .accion-aviso { color: var(--musgo); }
+
+/* Texto de la lectura (RV1909) */
+.lectura-texto { max-width: 760px; margin: 0 auto 96px; padding: 32px; border-radius: var(--radio); background: var(--superficie); }
+.lectura-cabeza { display: flex; gap: 14px; align-items: center; margin-bottom: 20px; }
+.lectura-cabeza svg { color: var(--brasa); flex-shrink: 0; }
+.lectura-cabeza h2 { font-family: var(--f-display); font-size: 24px; margin: 0; }
+.lectura-cabeza p { margin: 2px 0 0; font-size: 14px; color: var(--tinta-suave); }
+.lectura-texto details { border-top: 1px solid var(--linea); }
+.lectura-texto summary {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 16px 0; cursor: pointer; list-style: none;
+  font-family: var(--f-display); font-weight: 700; font-size: 20px;
+}
+.lectura-texto summary::-webkit-details-marker { display: none; }
+.lectura-texto summary::after { content: "+"; font-size: 24px; line-height: 1; color: var(--brasa); }
+.lectura-texto details[open] summary::after { content: "–"; }
+.lectura-texto summary small { margin-left: auto; font-family: var(--f-texto); font-weight: 400; font-size: 13px; color: var(--tinta-suave); }
+.lectura-capitulo h3 { font-family: var(--f-display); font-size: 15px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--brasa); margin: 4px 0 8px; }
+.lectura-capitulo p { margin: 0 0 16px; font-size: 19px; line-height: 1.75; }
+.lectura-capitulo sup { font-family: var(--f-display); font-weight: 700; font-size: 11px; color: var(--brasa); margin-right: 3px; vertical-align: 0.6em; }
+.lectura-rv1960 { display: inline-flex; align-items: center; gap: 6px; margin: 0 0 18px; font-size: 14px; color: var(--brasa); }
+.lectura-fuente { margin: 8px 0 0; padding-top: 14px; border-top: 1px solid var(--linea); font-size: 13px; color: var(--tinta-suave); }
+.ver-lectura { display: inline-block; margin-top: 8px; color: var(--brasa); font-weight: 600; }
+.leer-hoy { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: var(--sol-claro); }
+@media (max-width: 480px) { .lectura-texto { padding: 20px; margin-left: -4px; margin-right: -4px; } .lectura-capitulo p { font-size: 18px; } }
 
 /* Buscador */
 .buscador { display: grid; gap: 18px; }

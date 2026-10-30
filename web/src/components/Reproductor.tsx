@@ -1,6 +1,7 @@
 "use client";
 
-import { ExternalLink, Play } from "lucide-react";
+import { BookOpenText, ExternalLink, Play } from "lucide-react";
+import Link from "next/link";
 import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
@@ -196,6 +197,11 @@ export function Reproductor({ videos, etiqueta }: { videos: VideoReproducible[];
         {fuente === "audio" && siguiente && <p className="hoy-siguiente">Al terminar sigue: {SERIES[siguiente.serie].nombre}</p>}
         <AccionesVideo video={datosAccion(video)} tema="oscuro" />
         <SelectorFuente video={video} fuente={fuente} onCambio={setElegida} />
+        {video.serie !== "ninos" && (
+          <Link className="leer-hoy" href={`/${video.serie}/${video.slug}#lectura`}>
+            <BookOpenText size={16} aria-hidden="true" /> Leer el texto de la lectura
+          </Link>
+        )}
       </div>
     </div>
   );

@@ -38,8 +38,25 @@ export default async function PaginaSerie({ params }: PageProps<"/[serie]">) {
   const delAño = serie === "proverbios" ? [] : delAnio(publicados, serie, hoy);
   const capituloHoy = Number(hoy.slice(8, 10));
 
+  const datos = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: SERIES[serie].tituloSeo,
+    description: SERIES[serie].descripcion,
+    url: `${SITIO.url}/${serie}`,
+    inLanguage: "es-MX",
+    breadcrumb: {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Inicio", item: SITIO.url },
+        { "@type": "ListItem", position: 2, name: SERIES[serie].nombre, item: `${SITIO.url}/${serie}` },
+      ],
+    },
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(datos) }} />
       <section className="cabeza-pagina">
         <div className="contenedor cabeza-serie">
           <Revelar>

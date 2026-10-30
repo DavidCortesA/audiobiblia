@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   title: "Ajustes",
   description: "Avisos de los audios del día, modo oscuro, tamaño de letra e instalar Audio Biblia en tu celular.",
   alternates: { canonical: "/avisos" },
+  robots: { index: false },
 };
 
 export default function Avisos() {

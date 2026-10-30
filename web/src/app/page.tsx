@@ -1,4 +1,5 @@
-import { Bell, Play } from "lucide-react";
+import { Bell, Clock, Play } from "lucide-react";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { BotonAvisos } from "@/components/BotonAvisos";
@@ -11,10 +12,22 @@ import { fechaLarga } from "@/lib/fechas";
 import { LISTA_SERIES, SERIES, SITIO } from "@/lib/sitio";
 import amanecer from "../../public/img/amanecer.jpg";
 
+export const metadata: Metadata = { alternates: { canonical: "/" } };
+
 export default async function Inicio() {
-  const { publicados, proximos, hoy } = await getCatalogo();
+  const { publicados, proximos, hoy, generado } = await getCatalogo();
   const delDia = ultimoDia(publicados);
   const esHoy = delDia[0]?.fecha === hoy;
+  // Aviso si aún no salen los audios de hoy (o falta alguna serie), por ejemplo si se olvidó subirlos.
+  const horaLocal = Number(new Intl.DateTimeFormat("en-US", { timeZone: SITIO.zonaHoraria, hour: "numeric", hourCycle: "h23" }).format(new Date(generado)));
+  const faltan = esHoy ? LISTA_SERIES.filter((s) => !delDia.some((v) => v.serie === s)) : [];
+  const aviso = !esHoy
+    ? horaLocal < 6
+      ? { titulo: "Los audios de hoy salen a las 6:00 a.m.", texto: "Mientras tanto, aquí tienes los más recientes." }
+      : { titulo: "Los audios de hoy se están preparando", texto: "Vuelve en un rato. Mientras tanto, escucha los más recientes." }
+    : faltan.length
+      ? { titulo: `Aún no está: ${faltan.map((s) => SERIES[s].nombre).join(" y ")}`, texto: "En cuanto esté listo aparecerá aquí." }
+      : null;
   const diaNumero = delDia.find((v) => v.serie === "biblia")?.dia ?? delDia[0]?.dia;
 
   const jsonLd = {
@@ -23,9 +36,16 @@ export default async function Inicio() {
       {
         "@type": "WebSite",
         name: SITIO.nombreLargo,
+        alternateName: ["Audio Biblia", "Audio Biblia Castillo del Rey"],
         url: SITIO.url,
         inLanguage: "es-MX",
         description: SITIO.descripcion,
+        // Cuadro de búsqueda en los resultados de Google
+        potentialAction: {
+          "@type": "SearchAction",
+          target: { "@type": "EntryPoint", urlTemplate: `${SITIO.url}/buscar?q={search_term_string}` },
+          "query-input": "required name=search_term_string",
+        },
       },
       {
         "@type": "Organization",
@@ -82,6 +102,15 @@ export default async function Inicio() {
 
       <section className="hoy" id="hoy" aria-label="Audios del día">
         <div className="contenedor">
+          {aviso && (
+            <div className="aviso-hoy" role="status">
+              <Clock size={22} aria-hidden="true" />
+              <div>
+                <b>{aviso.titulo}</b>
+                <span>{aviso.texto}</span>
+              </div>
+            </div>
+          )}
           {delDia.length ? (
             <Reproductor
               etiqueta={esHoy ? `Hoy · ${fechaLarga(hoy)}` : `Lo más reciente · ${fechaLarga(delDia[0].fecha)}`}

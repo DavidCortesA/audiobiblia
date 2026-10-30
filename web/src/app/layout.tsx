@@ -12,8 +12,23 @@ const literata = Literata({ variable: "--font-literata", subsets: ["latin"], sty
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITIO.url),
-  title: { default: `${SITIO.nombre} — La Palabra en cada amanecer`, template: `%s · ${SITIO.nombre}` },
+  title: {
+    default: `${SITIO.nombre}: la Biblia en audio cada día — Proverbios y Biblia para niños`,
+    template: `%s · ${SITIO.nombre}`,
+  },
   description: SITIO.descripcion,
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
+  },
+  verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
+    : undefined,
+  category: "religion",
+  authors: [{ name: SITIO.iglesia }],
+  creator: SITIO.iglesia,
+  publisher: SITIO.iglesia,
   applicationName: SITIO.nombre,
   keywords: ["audio biblia", "biblia en audio", "proverbios del día", "biblia para niños", "devocional diario", "Castillo del Rey", "Monterrey"],
   openGraph: { type: "website", locale: "es_MX", siteName: SITIO.nombreLargo },
