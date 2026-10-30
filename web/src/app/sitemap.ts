@@ -1,8 +1,11 @@
 import type { MetadataRoute } from "next";
+import { connection } from "next/server";
 import { getCatalogo } from "@/lib/datos";
 import { LISTA_SERIES, SITIO } from "@/lib/sitio";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  // Se arma en cada visita (los datos ya vienen cacheados): así incluye lo que la Mac acaba de enviar.
+  await connection();
   const { publicados, generado } = await getCatalogo();
   return [
     { url: SITIO.url, lastModified: generado, changeFrequency: "daily", priority: 1 },
