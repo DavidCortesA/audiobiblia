@@ -452,6 +452,17 @@ button { font: inherit; }
 }
 .accion:active { transform: scale(0.96); }
 a.accion { text-decoration: none; }
+.accion:disabled { opacity: 0.5; cursor: default; }
+/* Imagen de una reflexión: tamaño, fondo y vista previa */
+.panel-imagen { flex-basis: 100%; display: grid; gap: 18px; margin-top: 8px; padding: 20px; border-radius: var(--radio); background: var(--superficie); }
+.panel-imagen fieldset { border: 0; margin: 0; padding: 0; }
+.panel-imagen legend { font-family: var(--f-display); font-weight: 700; font-size: 15px; margin-bottom: 10px; color: var(--tinta); }
+.panel-imagen .opcion small { font-weight: 600; opacity: 0.65; letter-spacing: 0; }
+.panel-imagen-vista { position: relative; width: 100%; margin: 0 auto; border-radius: 10px; overflow: hidden; background: var(--bosque); display: grid; place-items: center; box-shadow: var(--sombra); color: var(--crema); }
+.panel-imagen-vista img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.panel-imagen-vista p { color: var(--crema); padding: 24px; text-align: center; margin: 0; }
+.acciones-claro .accion-principal { background: var(--bosque); color: var(--crema); }
+.acciones-claro .accion-principal:hover { background: var(--noche); }
 .accion span { display: inline-grid; }
 .acciones-oscuro .accion { background: rgba(0, 0, 0, 0.25); color: var(--texto-claro); }
 .acciones-oscuro .accion:hover { background: rgba(0, 0, 0, 0.4); }

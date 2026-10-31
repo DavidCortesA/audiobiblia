@@ -5,7 +5,7 @@ import { ImageResponse } from "next/og";
 import { partesLectura } from "./datos";
 import { fechaLarga } from "./fechas";
 import { SERIES, SITIO } from "./sitio";
-import type { Video } from "./tipos";
+import type { Reflexion, Video } from "./tipos";
 
 const raiz = process.cwd();
 const archivo = (ruta: string) => readFile(join(raiz, ruta));
@@ -213,5 +213,88 @@ function imagenNinos(video: Video, ancho: number, alto: number, portada: Buffer,
       </div>
     ),
     { width: ancho, height: alto, fonts: fuentes },
+  );
+}
+
+// ---------- reflexiones ----------
+
+export const FORMATOS_REFLEXION = {
+  vertical: { ancho: 1080, alto: 1350, nombre: "Vertical" },
+  cuadrada: { ancho: 1080, alto: 1080, nombre: "Cuadrada" },
+  horizontal: { ancho: 1920, alto: 1080, nombre: "Horizontal" },
+} as const;
+export type FormatoReflexion = keyof typeof FORMATOS_REFLEXION;
+
+export const FONDOS_REFLEXION = {
+  amanecer: archivo("public/img/amanecer.jpg"),
+  nubes: archivo("public/img/reflexion-nubes.jpg"),
+};
+export type FondoReflexion = keyof typeof FONDOS_REFLEXION;
+
+/** Imagen del versículo de una reflexión: fondo, logo, versículo y cita. */
+export async function imagenReflexion(r: Reflexion, formato: FormatoReflexion, fondoElegido: FondoReflexion) {
+  const [josefin700, josefin600, literataItalica, logo] = await recursos;
+  const fondo = await FONDOS_REFLEXION[fondoElegido];
+  const { ancho, alto } = FORMATOS_REFLEXION[formato];
+  const horizontal = formato === "horizontal";
+  const texto = r.texto || r.cita;
+  const largo = texto.length;
+  // Que el versículo quepa sin tapar el logo ni la cita: letra más chica mientras más largo.
+  const base = horizontal ? 76 : formato === "vertical" ? 68 : 60;
+  const tam = Math.round(base * (largo > 170 ? 0.66 : largo > 120 ? 0.76 : largo > 80 ? 0.88 : 1));
+  const escala = horizontal ? 1.1 : 1;
+
+  return new ImageResponse(
+    (
+      <div style={{ width: "100%", height: "100%", display: "flex", position: "relative", background: NOCHE }}>
+        <img src={jpg(fondo)} width={ancho} height={alto} style={{ position: "absolute", top: 0, left: 0, width: ancho, height: alto, objectFit: "cover" }} alt="" />
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: ancho,
+            height: alto,
+            display: "flex",
+            background:
+              fondoElegido === "nubes"
+                ? "linear-gradient(180deg, rgba(14,26,19,0.55) 0%, rgba(14,26,19,0.45) 45%, rgba(14,26,19,0.75) 100%)"
+                : "linear-gradient(180deg, rgba(14,26,19,0.7) 0%, rgba(14,26,19,0.55) 45%, rgba(14,26,19,0.88) 100%)",
+          }}
+        />
+        <div
+          style={{
+            position: "relative",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "space-between",
+            width: "100%",
+            height: "100%",
+            padding: horizontal ? "64px 160px" : formato === "vertical" ? "84px 84px 80px" : "64px 80px",
+          }}
+        >
+          <img src={`data:image/png;base64,${logo.toString("base64")}`} width={300 * escala} height={88 * escala} alt="" />
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
+            <div style={{ display: "flex", fontFamily: "Literata", fontStyle: "italic", fontSize: tam * 1.6, lineHeight: 0.6, color: SOL, marginBottom: 18 }}>“</div>
+            <div style={{ display: "flex", fontFamily: "Literata", fontStyle: "italic", fontSize: tam, lineHeight: 1.32, color: CREMA, textAlign: "center", justifyContent: "center" }}>
+              {texto}
+            </div>
+            <div style={{ display: "flex", width: 72, height: 3, background: SOL, marginTop: 40 }} />
+            <div style={{ display: "flex", fontFamily: "Josefin", fontWeight: 700, fontSize: 34 * escala, letterSpacing: 4, color: SOL_CLARO, textTransform: "uppercase", marginTop: 26 }}>
+              {r.version ? `${r.cita}  ·  ${r.version}` : r.cita}
+            </div>
+          </div>
+          <div style={{ display: "flex", fontFamily: "Josefin", fontWeight: 600, fontSize: 24 * escala, letterSpacing: 3, color: "rgba(248,240,227,0.78)", textTransform: "uppercase" }}>
+            {`Reflexiones  ·  ${SITIO.url.replace(/^https?:\/\//, "")}`}
+          </div>
+        </div>
+      </div>
+    ),
+    { width: ancho, height: alto, fonts: [
+      { name: "Josefin", data: josefin700, weight: 700, style: "normal" },
+      { name: "Josefin", data: josefin600, weight: 600, style: "normal" },
+      { name: "Literata", data: literataItalica, weight: 400, style: "italic" },
+    ] },
   );
 }

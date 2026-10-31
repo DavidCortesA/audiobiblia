@@ -88,6 +88,12 @@ def leer_descripcion(texto):
         if m:
             cita, version = m.group(1).replace("–", "-"), m.group(2)
             limpia = limpia[m.end():].strip(" .-–")
+        # Enlaces (p. ej. bible.com/bible/149/pro.6.9-11.RVR1960): fuera del texto, pero dan la versión.
+        for enlace in re.findall(r"https?://\S+", limpia):
+            m_version = re.search(r"\.([A-Z]{2,}\d*)$", enlace.rstrip("/"))
+            if m_version and not version:
+                version = m_version.group(1)
+            limpia = limpia.replace(enlace, "")
         limpia = re.sub(r"#\S+", "", limpia).strip()
         if limpia:
             resto.append(limpia)

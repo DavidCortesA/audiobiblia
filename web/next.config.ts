@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/[serie]/[slug]": ["./data/rv1909/*.json"],
     "/reflexiones/[slug]": ["./data/rv1909/*.json"],
+    "/reflexiones/[slug]/**": ["./assets/fonts/*.woff", "./public/img/amanecer.jpg", "./public/img/reflexion-nubes.jpg", "./public/img/logo-blanco.png"],
     "/[serie]/[slug]/**": ["./data/rv1909/*.json", "./assets/fonts/*.woff", "./public/img/amanecer-1200.jpg", "./public/img/logo-blanco.png", "./public/img/ninos-portada.jpg", "./public/img/proverbios-fondo.jpg"],
   },
   images: {

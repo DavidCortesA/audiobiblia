@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { BotonAvisos } from "@/components/BotonAvisos";
 import { LecturaBiblica } from "@/components/LecturaBiblica";
 import { Revelar } from "@/components/Movimiento";
-import { CompartirReflexion, VideoFacebook } from "@/components/Reflexion";
+import { CompartirReflexion, ImagenReflexion, VideoFacebook } from "@/components/Reflexion";
 import { capituloDeCita, getCatalogo, getReflexion, getReflexiones, proverbiosDelMes } from "@/lib/datos";
 import { fechaLarga } from "@/lib/fechas";
 import { REFLEXIONES, SITIO } from "@/lib/sitio";
@@ -107,6 +107,7 @@ export default async function PaginaReflexion({ params }: PageProps<"/reflexione
             <a className="accion" href={r.url} target="_blank" rel="noopener">
               <ExternalLink size={18} aria-hidden="true" /> Ver en Facebook
             </a>
+            <ImagenReflexion slug={r.slug} cita={r.cita} />
           </div>
           <nav className="navegacion-videos" aria-label="Otras reflexiones">
             {anterior ? (
