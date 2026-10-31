@@ -507,6 +507,7 @@ a.accion { text-decoration: none; }
 .buscador-caja button { display: grid; place-items: center; width: 36px; height: 36px; border: 0; border-radius: 50%; background: transparent; color: var(--tinta-suave); cursor: pointer; }
 .sugerencias { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; color: var(--tinta-suave); font-size: 15px; }
 .sugerencias .opcion { min-height: 36px; padding: 0 14px; font-size: 13px; }
+.buscador-fragmento { display: block; margin-top: 4px; font-size: 14px; line-height: 1.45; color: var(--tinta-suave); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .buscador-cuenta { margin: 0; font-size: 14px; color: var(--tinta-suave); }
 .favorito-imagen .marca-tarjeta { top: 4px; right: 4px; width: 22px; height: 22px; }
 

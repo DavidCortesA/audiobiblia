@@ -3,10 +3,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BotonAvisos } from "@/components/BotonAvisos";
-import { LecturaBiblica } from "@/components/LecturaBiblica";
+import { HistoriaTexto, LecturaBiblica } from "@/components/LecturaBiblica";
 import { Revelar } from "@/components/Movimiento";
 import { ReproductorUnico } from "@/components/Reproductor";
-import { getCatalogo, getVideo, partesLectura } from "@/lib/datos";
+import { getCatalogo, getTranscripcion, getVideo, partesLectura } from "@/lib/datos";
 import { fechaLarga } from "@/lib/fechas";
 import { SERIES, SITIO, esSerie } from "@/lib/sitio";
 
@@ -65,6 +65,7 @@ export default async function PaginaVideo({ params }: PageProps<"/[serie]/[slug]
   const datos = await getVideo(serie, slug);
   if (!datos) notFound();
   const { video, anterior, siguiente } = datos;
+  const historia = serie === "ninos" && video.youtube ? await getTranscripcion(video.youtube) : null;
 
   const migas = {
     "@context": "https://schema.org",
@@ -85,6 +86,7 @@ export default async function PaginaVideo({ params }: PageProps<"/[serie]/[slug]
     inLanguage: "es",
     embedUrl: video.youtube ? `https://www.youtube.com/embed/${video.youtube}` : undefined,
     contentUrl: video.youtube ? `https://www.youtube.com/watch?v=${video.youtube}` : undefined,
+    transcript: historia ?? undefined,
     publisher: { "@type": "Organization", name: SITIO.iglesia, logo: { "@type": "ImageObject", url: `${SITIO.url}/icon-512.png` } },
   };
 
@@ -144,9 +146,9 @@ export default async function PaginaVideo({ params }: PageProps<"/[serie]/[slug]
           </span>
           <p className="lectura-grande">{video.lectura}</p>
           <p className="video-descripcion">{video.descripcion}</p>
-          {serie !== "ninos" && (
+          {(serie !== "ninos" || historia) && (
             <a className="ver-lectura" href="#lectura">
-              Leer el texto de la lectura ↓
+              {historia ? "Leer la historia ↓" : "Leer el texto de la lectura ↓"}
             </a>
           )}
           <div style={{ marginTop: 32 }}>
@@ -154,10 +156,16 @@ export default async function PaginaVideo({ params }: PageProps<"/[serie]/[slug]
           </div>
         </aside>
       </div>
-      {serie !== "ninos" && (
+      {serie !== "ninos" ? (
         <div className="contenedor">
           <LecturaBiblica lectura={video.lectura} />
         </div>
+      ) : (
+        historia && (
+          <div className="contenedor">
+            <HistoriaTexto titulo={video.lectura} texto={historia} />
+          </div>
+        )
       )}
     </>
   );

@@ -1,6 +1,6 @@
 import { cacheLife, cacheTag } from "next/cache";
 import { XMLParser } from "fast-xml-parser";
-import { leerArchivo, leerFeed, leerReflexiones } from "./almacen";
+import { leerArchivo, leerFeed, leerReflexiones, leerTranscripcion, leerTranscripciones } from "./almacen";
 import { fechaLocal, sumarDias } from "./fechas";
 import { SITIO, type Serie } from "./sitio";
 import type { Reflexion, Video, VideoFeed } from "./tipos";
@@ -93,6 +93,28 @@ export async function getVideo(serie: Serie, slug: string) {
   const i = lista.findIndex((v) => v.slug === slug);
   if (i === -1) return null;
   return { video: lista[i], anterior: lista[i + 1] ?? null, siguiente: lista[i - 1] ?? null };
+}
+
+// ---------- transcripciones de Niños ----------
+
+/** Texto de la historia (subtítulos automáticos de YouTube, limpios), en párrafos separados por línea en blanco. */
+export async function getTranscripcion(youtube: string) {
+  "use cache";
+  cacheLife({ stale: 300, revalidate: 3600, expire: 86400 });
+  cacheTag("transcripciones");
+  return leerTranscripcion(youtube);
+}
+
+export async function getTranscripciones() {
+  "use cache";
+  cacheLife({ stale: 300, revalidate: 3600, expire: 86400 });
+  cacheTag("transcripciones");
+  return leerTranscripciones();
+}
+
+/** Minúsculas y sin acentos, sin cambiar el largo (para ubicar el fragmento en el texto original). */
+export function plano(texto: string) {
+  return [...texto.toLowerCase()].map((c) => c.normalize("NFD")[0]).join("");
 }
 
 // ---------- reflexiones ----------

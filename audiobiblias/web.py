@@ -129,3 +129,22 @@ def enviar(cfg, videos, archivo, url=None, local=False, reflexiones=None):
         return f"Página actualizada: {datos.get('videos')} videos del calendario enviados a {url}"
     extra = f" y {datos['reflexiones']} reflexiones" if "reflexiones" in datos else ""
     return f"{datos.get('videos')} del calendario, {datos.get('archivo')} del archivo{extra} enviados a {url}"
+
+
+def enviar_transcripciones(cfg, textos, url=None, local=False, lote=25):
+    """Manda las transcripciones nuevas ({id de YouTube: texto}) en lotes pequeños. Devuelve las enviadas."""
+    claves = list(textos)
+    if local:
+        actuales = leer_json(LOCAL / "transcripciones.json", {})
+        guardar_json(LOCAL / "transcripciones.json", {**actuales, **textos})
+        return claves
+    url = (url or cfg.get("web", {}).get("url", "")).rstrip("/")
+    enviadas = []
+    for i in range(0, len(claves), lote):
+        parte = {k: textos[k] for k in claves[i:i + lote]}
+        r = requests.post(f"{url}/api/sync", json={"transcripciones": parte},
+                          headers={"Authorization": f"Bearer {token()}"}, timeout=120)
+        if r.status_code != 200:
+            raise RuntimeError(f"La página respondió {r.status_code}: {r.text[:200]}")
+        enviadas += list(parte)
+    return enviadas

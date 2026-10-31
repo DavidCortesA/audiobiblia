@@ -58,6 +58,16 @@ Hecha con Next.js 16 (App Router, Cache Components) y publicada en Vercel. Se in
 - **Guardar** en favoritos, **Compartir** (menú del celular / copiar enlace), **Imagen** (manda la imagen vertical como foto) y **Ya lo escuché**.
 - **Lee mientras escuchas**: la lectura completa en texto **Reina-Valera 1909** (dominio público), por secciones, con enlace a la **RV1960** en YouVersion. Interpreta las 325 lecturas del año, incluso formatos raros ("2 Samuel 2, 3:1", "Cap. 19", "Gálatas 3 4:1-7").
 
+### Niños: lee la historia
+
+<p>
+  <img src="docs/capturas/27-ninos-historia.jpg" alt="Lee la historia: transcripción de Conspiración para matar a Jesús" width="240">
+  <img src="docs/capturas/28-buscar-historias.jpg" alt="Buscar «judas» encuentra la historia y muestra el fragmento" width="240">
+</p>
+
+- Cada audio de Niños tiene **«Lee la historia»**: los subtítulos automáticos de YouTube, limpios y en párrafos (los baja la Mac poco a poco). También van como `transcript` en los datos estructurados para Google.
+- El **buscador** encuentra palabras de dentro de las historias («judas», «sacerdotes») y muestra el fragmento donde aparecen (`/api/historias?q=`).
+
 ### Imagen para compartir
 
 <p>
@@ -144,7 +154,8 @@ YouTube / Facebook (programados a las 6:00)        Vercel Cron 6/7/8 ──▶ a
 | `src/lib/biblia.ts` · `data/rv1909/` | Interpreta las referencias y lee el texto RV1909 (generado con `scripts/preparar_biblia.py`) |
 | `src/lib/imagen.tsx` | Imágenes para compartir con `next/og` (tipografías en `assets/fonts/`) |
 | `src/lib/almacen.ts` · `push.ts` | Redis (calendario, archivo, suscriptores con sus preferencias) y envío de avisos |
-| `src/app/api/sync` | Recibe el calendario, el archivo y las reflexiones de la Mac (`SYNC_TOKEN`) |
+| `src/app/api/sync` | Recibe el calendario, el archivo, las reflexiones y las transcripciones de Niños de la Mac (`SYNC_TOKEN`) |
+| `src/app/api/historias` | Busca palabras dentro de las transcripciones de Niños |
 | `src/app/reflexiones/` · `components/Reflexion.tsx` | Sección Reflexiones, reproductor de Facebook e imagen del versículo |
 | `src/app/api/cron/notify` | Avisos de las 6, 7 y 8 (`CRON_SECRET`) |
 | `src/app/api/push/*` | Suscribir, preferencias, desactivar, prueba y reporte de errores |

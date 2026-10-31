@@ -13,6 +13,7 @@ data/panel.html
 data/catalogo.json
 data/subidas_youtube.json
 data/reflexiones_portadas.json
+data/transcripciones.json
 
 # Descargas
 videos/

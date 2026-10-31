@@ -18,6 +18,8 @@ interface Entrada {
   m: string;
 }
 
+const SIN_FRAGMENTOS: Record<string, string> = {};
+
 const SUGERENCIAS = ["Salmo 23", "Juan 3", "Génesis 1", "Proverbios 3", "David", "Jonás", "Daniel"];
 
 const nombreDe = (e: Entrada) => (e.e === "reflexiones" ? `${REFLEXIONES.nombre} reflexion ${e.t ?? ""}` : SERIES[e.e].nombre);
@@ -42,6 +44,8 @@ export function Buscador() {
   const [indice, setIndice] = useState<Entrada[] | null>(null);
   const [error, setError] = useState(false);
   const [texto, setTexto] = useState("");
+  // Coincidencias dentro de las historias de Niños (las busca el servidor): {consulta, slug → fragmento}.
+  const [enHistorias, setEnHistorias] = useState<{ consulta: string; fragmentos: Record<string, string> } | null>(null);
 
   useEffect(() => {
     // Si se llegó con ?q=, se usa como búsqueda inicial cuando el índice termina de cargar.
@@ -54,6 +58,28 @@ export function Buscador() {
       })
       .catch(() => setError(true));
   }, []);
+
+  useEffect(() => {
+    const consulta = texto.trim();
+    if (consulta.length < 3) return;
+    const control = new AbortController();
+    const espera = window.setTimeout(() => {
+      fetch(`/api/historias?q=${encodeURIComponent(consulta)}`, { signal: control.signal })
+        .then((r) => (r.ok ? r.json() : []))
+        .then((lista: { s: string; fragmento: string }[]) =>
+          setEnHistorias({ consulta, fragmentos: Object.fromEntries(lista.map((x) => [x.s, x.fragmento])) }),
+        )
+        .catch(() => {});
+    }, 350);
+    return () => {
+      window.clearTimeout(espera);
+      control.abort();
+    };
+  }, [texto]);
+  const fragmentos = useMemo(
+    () => (enHistorias?.consulta === texto.trim() ? enHistorias.fragmentos : SIN_FRAGMENTOS),
+    [enHistorias, texto],
+  );
 
   const resultados = useMemo(() => {
     const consulta = normalizar(texto);
@@ -68,8 +94,14 @@ export function Buscador() {
       const todas = tokens.every((t) => (/^\d+$/.test(t) ? suyas.has(t) : [...suyas].some((p) => p.startsWith(t))));
       return todas ? [{ e, puntos: 1 }] : [];
     });
-    return puntuados.sort((a, b) => b.puntos - a.puntos || b.e.f.localeCompare(a.e.f)).slice(0, 60).map((x) => x.e);
-  }, [indice, texto]);
+    // Luego, las historias de Niños que mencionan la búsqueda en su texto.
+    const ya = new Set(puntuados.map((x) => x.e.s));
+    const deHistorias = indice.filter((e) => fragmentos[e.s] && !ya.has(e.s)).map((e) => ({ e, puntos: 0 }));
+    return [...puntuados, ...deHistorias]
+      .sort((a, b) => b.puntos - a.puntos || b.e.f.localeCompare(a.e.f))
+      .slice(0, 60)
+      .map((x) => x.e);
+  }, [indice, texto, fragmentos]);
 
   function cambiar(valor: string) {
     setTexto(valor);
@@ -88,7 +120,7 @@ export function Buscador() {
           type="search"
           value={texto}
           onChange={(e) => cambiar(e.target.value)}
-          placeholder="Libro, capítulo o historia… (ej. Juan 3, David)"
+          placeholder="Libro, capítulo, historia o palabra… (ej. Juan 3, David)"
           autoFocus
           enterKeyHint="search"
           autoComplete="off"
@@ -135,6 +167,7 @@ export function Buscador() {
                       {r.e === "biblia" || r.e === "ninos" ? ` · Día ${r.d}` : ""}
                     </span>
                     <span className="favorito-titulo">{r.l}</span>
+                    {fragmentos[r.s] && <span className="buscador-fragmento">{fragmentos[r.s]}</span>}
                   </span>
                 </Link>
               </li>

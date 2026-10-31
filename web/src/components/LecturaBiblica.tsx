@@ -50,3 +50,31 @@ export function LecturaBiblica({
     </section>
   );
 }
+
+/** Niños: la historia en texto (transcripción automática del audio), en párrafos. */
+export function HistoriaTexto({ titulo, texto }: { titulo: string; texto: string }) {
+  const parrafos = texto.split(/\n{2,}/).filter(Boolean);
+  const palabras = texto.split(/\s+/).length;
+  return (
+    <section className="lectura-texto" id="lectura" aria-labelledby="titulo-lectura">
+      <div className="lectura-cabeza">
+        <BookOpenText size={26} aria-hidden="true" />
+        <div>
+          <h2 id="titulo-lectura">Lee la historia</h2>
+          <p>Transcripción automática del audio · puede tener pequeños errores</p>
+        </div>
+      </div>
+      <details open>
+        <summary>
+          <span>{titulo}</span>
+          <small>{Math.max(1, Math.round(palabras / 200))} min de lectura</small>
+        </summary>
+        <div className="lectura-capitulo">
+          {parrafos.map((p, i) => (
+            <p key={i}>{p}</p>
+          ))}
+        </div>
+      </details>
+    </section>
+  );
+}

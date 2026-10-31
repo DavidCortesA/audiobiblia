@@ -64,6 +64,28 @@ export async function guardarReflexiones(lista: Reflexion[]) {
   else await guardarLocal("reflexiones.json", lista);
 }
 
+// ---------- transcripciones de Niños ({id de YouTube: texto}, las manda la Mac poco a poco) ----------
+
+export async function leerTranscripcion(id: string): Promise<string | null> {
+  if (redis) return (await redis.hget<string>("transcripciones", id)) ?? null;
+  return (await leerLocal<Record<string, string>>("transcripciones.json", {}))[id] ?? null;
+}
+
+export async function leerTranscripciones(): Promise<Record<string, string>> {
+  if (redis) return (await redis.hgetall<Record<string, string>>("transcripciones")) ?? {};
+  return leerLocal<Record<string, string>>("transcripciones.json", {});
+}
+
+export async function guardarTranscripciones(textos: Record<string, string>) {
+  if (!Object.keys(textos).length) return;
+  if (redis) {
+    await redis.hset("transcripciones", textos);
+    return;
+  }
+  const actuales = await leerLocal<Record<string, string>>("transcripciones.json", {});
+  await guardarLocal("transcripciones.json", { ...actuales, ...textos });
+}
+
 // ---------- suscripciones a notificaciones (con sus preferencias) ----------
 
 export const HORAS_AVISO = [6, 7, 8] as const;

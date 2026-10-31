@@ -7,7 +7,7 @@ import sys
 from datetime import date, datetime, timedelta
 from zoneinfo import ZoneInfo
 
-from . import audio, catalogo, descarga, facebook, panel, reflexiones, seleccion, web, youtube
+from . import audio, catalogo, descarga, facebook, panel, reflexiones, seleccion, transcripciones, web, youtube
 from .config import DATA, SERIES, cargar_config, guardar_json, leer_json
 
 ESTADO = DATA / "estado.json"
@@ -351,6 +351,29 @@ def cmd_web_sync(cfg, args):
         except Exception as e:  # token vencido o sin internet: la página conserva las que ya tenía
             print(f"⚠ No se pudieron leer las reflexiones de Facebook ({e}).")
     print(web.enviar(cfg, videos, archivo, url=args.url, local=args.local, reflexiones=refl))
+    _transcripciones(cfg, estado, archivo, args.url, args.local)
+
+
+def _transcripciones(cfg, estado, archivo, url=None, local=False, maximo=transcripciones.MAX_POR_CORRIDA):
+    """Niños: baja las transcripciones que faltan y manda a la página las nuevas."""
+    try:
+        nuevas, sin, por_enviar = transcripciones.sincronizar(cfg, estado, archivo, maximo)
+        if por_enviar:
+            enviadas = web.enviar_transcripciones(cfg, por_enviar, url=url, local=local)
+            if not local:  # las pruebas locales no cuentan: la página publicada aún no las tiene
+                transcripciones.marcar_enviadas(enviadas)
+        total = sum(1 for v in leer_json(transcripciones.CACHE, {}).values() if v["texto"])
+        faltan = sum(1 for k, _ in transcripciones.videos_ninos(estado, archivo) if k not in leer_json(transcripciones.CACHE, {}))
+        print(f"Transcripciones de Niños: {nuevas} nuevas, {len(por_enviar)} enviadas, {total} en total"
+              + (f", {sin} sin subtítulos" if sin else "") + (f", faltan {faltan}" if faltan else "") + ".")
+    except Exception as e:  # sin internet o sin cookies: se intenta en la siguiente corrida
+        print(f"⚠ No se pudieron preparar las transcripciones de Niños ({e}).")
+
+
+def cmd_transcripciones(cfg, args):
+    estado = cargar_estado()
+    archivo = web.armar_archivo(cfg, leer_json(web.SUBIDAS, []))
+    _transcripciones(cfg, estado, archivo, args.url, args.local, args.max)
 
 
 def cmd_panel(cfg, args):
@@ -449,6 +472,12 @@ def main():
     s.add_argument("--url", help="dirección de la página (por defecto web.url de config.yaml)")
     s.add_argument("--local", action="store_true", help="solo guardarlo para la página en modo desarrollo")
     s.set_defaults(func=cmd_web_sync)
+
+    s = sub.add_parser("transcripciones", help="baja y envía las transcripciones de Niños que faltan")
+    s.add_argument("--max", type=int, default=transcripciones.MAX_POR_CORRIDA, help="cuántas bajar como máximo")
+    s.add_argument("--url", help="dirección de la página (por defecto web.url de config.yaml)")
+    s.add_argument("--local", action="store_true", help="solo guardarlas para la página en modo desarrollo")
+    s.set_defaults(func=cmd_transcripciones)
 
     s = sub.add_parser("auth-reflexiones", help="token de la página de Facebook de reflexiones (solo lectura)")
     s.set_defaults(func=cmd_auth_reflexiones)

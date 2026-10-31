@@ -50,6 +50,16 @@ La **corrida automática** (abajo) está activa: todos los días a las 7:00 deja
 
 Se guarda en `credenciales/facebook_reflexiones.json` y no caduca; si Facebook deja de dar acceso (cada ~90 días pide volver a entrar a la app), se repite el comando.
 
+### Transcripciones de Niños
+
+`./ab web-sync` también baja los **subtítulos automáticos de YouTube** de los audios de Niños (hasta 20 por corrida, con pausas, para que YouTube no bloquee), los limpia (sin «[música]» ni la bienvenida que se repite) y los manda a la página: salen como «Lee la historia» y el buscador encuentra palabras de dentro de la historia. Para adelantar las que faltan:
+
+```bash
+./ab transcripciones --max 40
+```
+
+Necesita las cookies de un Chrome con YouTube iniciado (`cookies_navegador: chrome` usa el perfil principal, "Persona 1"). Quedan guardadas en `data/transcripciones.json`.
+
 ### La última Audio Biblia
 
 Se detecta sola: es la más reciente publicada en tu canal (`./ab ultima-biblia` te dice cuál). Si necesitas corregirla, por ejemplo porque subiste una a mano:
@@ -76,7 +86,7 @@ Hace `./ab programar --dias 14`, `./ab web-sync` y actualiza el panel; bitácora
 ## Límites y problemas conocidos
 
 - **YouTube · cuota de la API**: hay un tope diario (Google Cloud → APIs → YouTube Data API v3 → Cuotas). Se suben hasta `max_subidas_por_corrida` (30) por corrida; si se acaba, lo que falte se sube en la siguiente. Se puede pedir más cuota gratis (formulario "YouTube API Services – Audit and Quota Extension").
-- **YouTube · "confirma que no eres un bot"**: si se descargan muchos videos seguidos, YouTube bloquea las descargas unas horas. El programa no se cae: sigue con lo que ya tiene y lo demás lo intenta después. Hay pausas de 8–25 s entre descargas; si se repite seguido, pon `cookies_navegador: chrome` (o `safari`) en `config.yaml`.
+- **YouTube · "confirma que no eres un bot"**: si se descargan muchos videos seguidos, YouTube bloquea las descargas unas horas. El programa no se cae: sigue con lo que ya tiene y lo demás lo intenta después. Hay pausas de 8–25 s entre descargas y se usan las cookies de Chrome (`cookies_navegador: chrome`). **Importante:** el perfil principal de Chrome ("Persona 1") debe tener YouTube con la sesión iniciada; si no, las cookies no sirven y el bloqueo sigue.
 - **Facebook**: solo se programa hasta 28 días adelante.
 - **Audios**: se guardan los de los últimos 60 días en Vercel Blob (~11 MB por día, unos 680 MB de 1 GB gratis; ~10 GB de descargas al mes). Solo se borran al correr `./ab web-sync`; Vercel no borra nada por su cuenta. Si se llena, la página usa YouTube automáticamente. Si crece mucho la audiencia, conviene pasarlos a Cloudflare R2.
 - **Node**: el subidor de audios necesita Node 18 o más nuevo; lo busca solo en `~/.nvm` aunque el `node` por defecto sea viejo.
@@ -104,6 +114,7 @@ audiobiblias/
   audio.py                audios AAC 48 kbps → Vercel Blob (borra los de más de 60 días)
   web.py                  calendario y archivo del año → página (/api/sync)
   reflexiones.py          videos de la página de Facebook Audio Biblia → sección Reflexiones
+  transcripciones.py      subtítulos automáticos de Niños → «Lee la historia» y buscador
   panel.py                panel local (./ab panel)
   cli.py                  comandos
 scripts/                  corrida diaria, instalador de launchd, preparar_biblia.py
