@@ -21,7 +21,7 @@ Programa de la Mac que prepara cada día los audios del canal [AUDIO BIBLIAS](ht
 
 ## Uso
 
-La corrida automática diaria está **desactivada**; se programa a mano cuando quieras:
+La **corrida automática** (abajo) está activa: todos los días a las 7:00 deja programados los siguientes 14 días y sube los audios. También se puede hacer a mano:
 
 ```bash
 ./ab plan --semana            # muestra qué se publicaría (no sube nada)
@@ -59,7 +59,7 @@ Basta con el capítulo; si varias lecturas empiezan igual (el canal ha usado má
 ./scripts/instalar_automatico.sh --quitar
 ```
 
-Hace `./ab programar --dias 14`, `./ab web-sync` y actualiza el panel; bitácora en `data/logs/`. El proyecto debe estar **fuera de Documentos, Escritorio y Descargas** (macOS no deja que las tareas automáticas lean esas carpetas). Hoy está desactivada.
+Hace `./ab programar --dias 14`, `./ab web-sync` y actualiza el panel; bitácora en `data/logs/`. El proyecto debe estar **fuera de Documentos, Escritorio y Descargas** (macOS no deja que las tareas automáticas lean esas carpetas). Está activada desde el 31 de octubre de 2026.
 
 ## Límites y problemas conocidos
 
