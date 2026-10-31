@@ -499,6 +499,9 @@ button { font: inherit; }
 .opcion input { position: absolute; opacity: 0; pointer-events: none; }
 .opcion:has(input:focus-visible) { outline: 3px solid var(--sol); outline-offset: 2px; }
 .opcion-activa { background: var(--bosque); color: var(--crema); box-shadow: none; }
+/* En modo oscuro el verde se pierde con el fondo: la opción elegida va en dorado. */
+:root[data-tema="oscuro"] .opcion-activa { background: var(--sol); color: var(--noche); }
+@media (prefers-color-scheme: dark) { :root[data-tema="auto"] .opcion-activa { background: var(--sol); color: var(--noche); } }
 .preferencias-nota { margin: 8px 0 0; font-size: 13px; color: var(--tinta-suave); }
 .preferencias-estado { margin: 0; min-height: 1.4em; font-size: 14px; color: var(--musgo); }
 
