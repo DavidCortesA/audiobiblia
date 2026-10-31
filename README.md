@@ -19,6 +19,8 @@ Programa de la Mac que prepara cada día los audios del canal [AUDIO BIBLIAS](ht
 | **Proverbios** | Proverbios *N*, donde *N* es el día del mes (3 de nov → Proverbios 3). Versión más reciente. |
 | **Niños** | Audio Biblia Niños Día *N* (día del año − 1). Siempre la versión **más reciente** (las viejas tenían errores de edición). |
 
+Además, la página muestra las **Reflexiones**: los videos cortos de la página de Facebook **Audio Biblia** (una persona reflexiona sobre un versículo), desde 2026. A esa página no se sube nada: solo se leen sus videos.
+
 ## Uso
 
 La **corrida automática** (abajo) está activa: todos los días a las 7:00 deja programados los siguientes 14 días y sube los audios. También se puede hacer a mano:
@@ -37,6 +39,16 @@ La **corrida automática** (abajo) está activa: todos los días a las 7:00 deja
 
 - `programar` se puede repetir sin miedo: recuerda lo que ya subió (en `data/estado.json`) y solo completa lo que falte. Con `--solo youtube|facebook` hace solo una plataforma; con `--sin-web` no avisa a la página; con `--ahora`, si la hora de un día ya pasó, lo publica de inmediato.
 - Lo programado se publica a las 6:00 **aunque la Mac esté apagada**. Antes de un viaje, `./ab programar --mes` y `./ab web-sync` dejan un mes listo (Facebook acepta hasta 28 días adelante).
+
+### Reflexiones
+
+`./ab web-sync` lee los videos de la página de Facebook **Audio Biblia** publicados desde el 1 de enero de 2026, separa de la descripción la cita, la versión y el versículo ("Proverbios 13:20 NTV" + texto), guarda una copia de la portada en Vercel Blob (las de Facebook caducan) y los manda a la página. El token se pone una vez, aparte de las 3 páginas donde se publica:
+
+```bash
+./ab auth-reflexiones     # pide el token (de usuario o de página) y elige la página "Audio Biblia"
+```
+
+Se guarda en `credenciales/facebook_reflexiones.json` y no caduca; si Facebook deja de dar acceso (cada ~90 días pide volver a entrar a la app), se repite el comando.
 
 ### La última Audio Biblia
 
@@ -91,6 +103,7 @@ audiobiblias/
   youtube.py · facebook.py  subida programada
   audio.py                audios AAC 48 kbps → Vercel Blob (borra los de más de 60 días)
   web.py                  calendario y archivo del año → página (/api/sync)
+  reflexiones.py          videos de la página de Facebook Audio Biblia → sección Reflexiones
   panel.py                panel local (./ab panel)
   cli.py                  comandos
 scripts/                  corrida diaria, instalador de launchd, preparar_biblia.py

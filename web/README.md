@@ -71,6 +71,23 @@ Hecha con Next.js 16 (App Router, Cache Components) y publicada en Vercel. Se in
 - Se genera sola para cada audio (`next/og`): **horizontal** (1200×630) para la vista previa al pegar el enlace en WhatsApp/Facebook y **vertical** (1080×1350) para mandarla como foto o subirla a estados.
 - Fondo por serie: amanecer (Biblia), nubes al atardecer (Proverbios) y portada de Fuerza Kids (Niños).
 
+### Reflexiones
+
+<p>
+  <img src="docs/capturas/21-reflexiones.jpg" alt="Lista de reflexiones con portada, duración y versículo" width="240">
+  <img src="docs/capturas/22-reflexion.jpg" alt="Página de una reflexión: video de Facebook y versículo" width="240">
+  <img src="docs/capturas/23-reflexion-imagen.jpg" alt="Panel Imagen: tamaño, fondo y vista previa" width="240">
+</p>
+<p>
+  <img src="docs/capturas/24-imagen-vertical.jpg" alt="Imagen vertical 1080×1350 con fondo amanecer" width="250">
+  <img src="docs/capturas/25-imagen-cuadrada.jpg" alt="Imagen cuadrada 1080×1080 con fondo de nubes" width="310">
+  <img src="docs/capturas/26-imagen-horizontal.jpg" alt="Imagen horizontal 1920×1080" width="550">
+</p>
+
+- Videos cortos de la página de Facebook **Audio Biblia**: una persona reflexiona sobre un versículo (desde 2026). La Mac los lee con `./ab web-sync`; también salen en el inicio (bloque 04), el menú, el buscador y el sitemap.
+- Cada reflexión tiene su página (`/reflexiones/[slug]`): el video de Facebook (se carga al dar play), el versículo con su versión (NTV, RVR1960), **Compartir**, **Ver en Facebook**, el enlace a **escuchar el Proverbio completo** en audio y el capítulo en texto RV1909.
+- **Imagen del versículo** en 3 tamaños — **vertical 1080×1350**, **cuadrada 1080×1080**, **horizontal 1920×1080** — y 2 fondos propios (amanecer y nubes rosadas), con vista previa, compartir y descargar: `/reflexiones/[slug]/imagen?formato=vertical|cuadrada|horizontal&fondo=amanecer|nubes`.
+
 ### Buscar, Mi espacio y Ajustes
 
 <p>
@@ -127,7 +144,8 @@ YouTube / Facebook (programados a las 6:00)        Vercel Cron 6/7/8 ──▶ a
 | `src/lib/biblia.ts` · `data/rv1909/` | Interpreta las referencias y lee el texto RV1909 (generado con `scripts/preparar_biblia.py`) |
 | `src/lib/imagen.tsx` | Imágenes para compartir con `next/og` (tipografías en `assets/fonts/`) |
 | `src/lib/almacen.ts` · `push.ts` | Redis (calendario, archivo, suscriptores con sus preferencias) y envío de avisos |
-| `src/app/api/sync` | Recibe el calendario de la Mac (`SYNC_TOKEN`) |
+| `src/app/api/sync` | Recibe el calendario, el archivo y las reflexiones de la Mac (`SYNC_TOKEN`) |
+| `src/app/reflexiones/` · `components/Reflexion.tsx` | Sección Reflexiones, reproductor de Facebook e imagen del versículo |
 | `src/app/api/cron/notify` | Avisos de las 6, 7 y 8 (`CRON_SECRET`) |
 | `src/app/api/push/*` | Suscribir, preferencias, desactivar, prueba y reporte de errores |
 | `public/sw.js` | Service worker: avisos push y copia sin conexión |

@@ -258,7 +258,7 @@ export async function imagenReflexion(r: Reflexion, formato: FormatoReflexion, f
             display: "flex",
             background:
               fondoElegido === "nubes"
-                ? "linear-gradient(180deg, rgba(14,26,19,0.55) 0%, rgba(14,26,19,0.45) 45%, rgba(14,26,19,0.75) 100%)"
+                ? "linear-gradient(180deg, rgba(14,26,19,0.48) 0%, rgba(14,26,19,0.36) 45%, rgba(14,26,19,0.7) 100%)"
                 : "linear-gradient(180deg, rgba(14,26,19,0.7) 0%, rgba(14,26,19,0.55) 45%, rgba(14,26,19,0.88) 100%)",
           }}
         />
