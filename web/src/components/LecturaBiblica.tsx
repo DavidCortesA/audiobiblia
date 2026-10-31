@@ -2,7 +2,15 @@ import { BookOpenText, ExternalLink } from "lucide-react";
 import { textoDeLectura } from "@/lib/biblia";
 
 /** La lectura del audio en texto (Reina-Valera 1909), por secciones, con enlace a la RV1960. */
-export function LecturaBiblica({ lectura }: { lectura: string }) {
+export function LecturaBiblica({
+  lectura,
+  titulo = "Lee mientras escuchas",
+  nota = "Reina-Valera 1909 · el audio puede leer otra versión",
+}: {
+  lectura: string;
+  titulo?: string;
+  nota?: string;
+}) {
   const secciones = textoDeLectura(lectura);
   if (!secciones.length) return null;
   return (
@@ -10,8 +18,8 @@ export function LecturaBiblica({ lectura }: { lectura: string }) {
       <div className="lectura-cabeza">
         <BookOpenText size={26} aria-hidden="true" />
         <div>
-          <h2 id="titulo-lectura">Lee mientras escuchas</h2>
-          <p>Reina-Valera 1909 · el audio puede leer otra versión</p>
+          <h2 id="titulo-lectura">{titulo}</h2>
+          <p>{nota}</p>
         </div>
       </div>
       {secciones.map((s, i) => (

@@ -20,6 +20,15 @@ export const SITIO = {
   contactoCorreo: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "castillodelreymdd@gmail.com",
 };
 
+/** Reflexiones: videos cortos de la página de Facebook "Audio Biblia" (no son una serie diaria). */
+export const REFLEXIONES = {
+  nombre: "Reflexiones",
+  tituloSeo: "Reflexiones de Proverbios — un versículo para tu semana",
+  descripcion: "Un versículo de la Biblia y una reflexión corta para llevarlo a tu vida, en video.",
+  paginaFacebook: "Audio Biblia",
+  paginaFacebookId: "107267775564067",
+};
+
 export const SERIES = {
   biblia: {
     nombre: "Audio Biblia",

@@ -5,17 +5,17 @@ import Link from "next/link";
 import { BotonAvisos } from "@/components/BotonAvisos";
 import { InstalarApp } from "@/components/InstalarApp";
 import { EntradaHero, LineaHero, Revelar } from "@/components/Movimiento";
-import { Proximos, TarjetaVideo } from "@/components/Piezas";
+import { Proximos, TarjetaReflexion, TarjetaVideo } from "@/components/Piezas";
 import { Reproductor } from "@/components/Reproductor";
-import { getCatalogo, ultimoDia } from "@/lib/datos";
+import { getCatalogo, getReflexiones, ultimoDia } from "@/lib/datos";
 import { fechaLarga } from "@/lib/fechas";
-import { LISTA_SERIES, SERIES, SITIO } from "@/lib/sitio";
+import { LISTA_SERIES, REFLEXIONES, SERIES, SITIO } from "@/lib/sitio";
 import amanecer from "../../public/img/amanecer.jpg";
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 export default async function Inicio() {
-  const { publicados, proximos, hoy, generado } = await getCatalogo();
+  const [{ publicados, proximos, hoy, generado }, reflexiones] = await Promise.all([getCatalogo(), getReflexiones()]);
   const delDia = ultimoDia(publicados);
   const esHoy = delDia[0]?.fecha === hoy;
   // Aviso si aún no salen los audios de hoy (o falta alguna serie), por ejemplo si se olvidó subirlos.
@@ -163,6 +163,25 @@ export default async function Inicio() {
               </div>
             );
           })}
+          {reflexiones.length > 0 && (
+            <div className="serie-bloque">
+              <Revelar>
+                <span className="numero">0{LISTA_SERIES.length + 1}</span>
+                <h2 className="titulo-m" style={{ marginTop: 12 }}>
+                  {REFLEXIONES.nombre}
+                </h2>
+                <p>{REFLEXIONES.descripcion}</p>
+                <Link className="ver-todo" href="/reflexiones">
+                  Ver todas →
+                </Link>
+              </Revelar>
+              <div className="rejilla-videos">
+                {reflexiones.slice(0, 3).map((r) => (
+                  <TarjetaReflexion key={r.slug} reflexion={r} />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 

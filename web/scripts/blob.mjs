@@ -1,5 +1,5 @@
 // Subidor de audios para la Mac (lo llama audiobiblias/audio.py).
-//   node scripts/blob.mjs put <archivo> <ruta>   → imprime la URL pública
+//   node scripts/blob.mjs put <archivo> <ruta> [tipo]   → imprime la URL pública (tipo: audio/mp4 por defecto)
 //   node scripts/blob.mjs del <url> [url...]
 //   node scripts/blob.mjs list <prefijo>          → JSON con url, pathname, size
 // Requiere BLOB_READ_WRITE_TOKEN en el entorno.
@@ -9,10 +9,10 @@ import { del, list, put } from "@vercel/blob";
 const [accion, ...args] = process.argv.slice(2);
 
 if (accion === "put") {
-  const [archivo, ruta] = args;
+  const [archivo, ruta, tipo = "audio/mp4"] = args;
   const blob = await put(ruta, await readFile(archivo), {
     access: "public",
-    contentType: "audio/mp4",
+    contentType: tipo,
     addRandomSuffix: false,
     allowOverwrite: true,
     cacheControlMaxAge: 60 * 60 * 24 * 30,

@@ -7,7 +7,7 @@ import path from "node:path";
 import { Redis } from "@upstash/redis";
 import type { PushSubscription } from "web-push";
 import { LISTA_SERIES, type Serie } from "./sitio";
-import type { VideoFeed } from "./tipos";
+import type { Reflexion, VideoFeed } from "./tipos";
 
 const url = process.env.KV_REST_API_URL ?? process.env.UPSTASH_REDIS_REST_URL;
 const token = process.env.KV_REST_API_TOKEN ?? process.env.UPSTASH_REDIS_REST_TOKEN;
@@ -50,6 +50,18 @@ export async function leerArchivo(): Promise<VideoFeed[]> {
 export async function guardarArchivo(videos: VideoFeed[]) {
   if (redis) await redis.set("archivo", videos);
   else await guardarLocal("archivo.json", videos);
+}
+
+// ---------- reflexiones (videos de la página de Facebook "Audio Biblia") ----------
+
+export async function leerReflexiones(): Promise<Reflexion[]> {
+  if (redis) return (await redis.get<Reflexion[]>("reflexiones")) ?? [];
+  return leerLocal<Reflexion[]>("reflexiones.json", []);
+}
+
+export async function guardarReflexiones(lista: Reflexion[]) {
+  if (redis) await redis.set("reflexiones", lista);
+  else await guardarLocal("reflexiones.json", lista);
 }
 
 // ---------- suscripciones a notificaciones (con sus preferencias) ----------

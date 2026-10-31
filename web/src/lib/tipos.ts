@@ -18,3 +18,17 @@ export interface VideoFeed {
 export interface Video extends VideoFeed {
   miniatura: string;
 }
+
+/** Reflexión: video corto de la página de Facebook "Audio Biblia" sobre un versículo (lo envía la Mac). */
+export interface Reflexion {
+  slug: string; // "2026-09-12-proverbios-13-20"
+  id: string; // ID del video en Facebook
+  fecha: string; // AAAA-MM-DD
+  publicado: string; // ISO
+  cita: string; // "Proverbios 13:20"
+  version: string | null; // "NTV", "RVR1960"
+  texto: string; // el versículo
+  duracion: number; // segundos
+  url: string; // video en Facebook
+  miniatura: string | null; // portada (copia en Vercel Blob)
+}

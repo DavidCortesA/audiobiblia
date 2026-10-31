@@ -107,19 +107,25 @@ def armar_archivo(cfg, subidas):
     return list(elegidos.values())
 
 
-def enviar(cfg, videos, archivo, url=None, local=False):
+def enviar(cfg, videos, archivo, url=None, local=False, reflexiones=None):
     if local:
         guardar_json(LOCAL / "feed.json", videos)
         guardar_json(LOCAL / "archivo.json", archivo)
+        if reflexiones is not None:
+            guardar_json(LOCAL / "reflexiones.json", reflexiones)
         return f"guardado en {LOCAL}"
     url = (url or cfg.get("web", {}).get("url", "")).rstrip("/")
     if not url:
         raise RuntimeError("Falta web.url en config.yaml (la dirección de la página en Vercel)")
-    r = requests.post(f"{url}/api/sync", json={"videos": videos, "archivo": archivo},
+    cuerpo = {"videos": videos, "archivo": archivo}
+    if reflexiones is not None:
+        cuerpo["reflexiones"] = reflexiones
+    r = requests.post(f"{url}/api/sync", json=cuerpo,
                       headers={"Authorization": f"Bearer {token()}"}, timeout=120)
     if r.status_code != 200:
         raise RuntimeError(f"La página respondió {r.status_code}: {r.text[:200]}")
     datos = r.json()
     if not archivo:
         return f"Página actualizada: {datos.get('videos')} videos del calendario enviados a {url}"
-    return f"{datos.get('videos')} del calendario y {datos.get('archivo')} del archivo enviados a {url}"
+    extra = f" y {datos['reflexiones']} reflexiones" if "reflexiones" in datos else ""
+    return f"{datos.get('videos')} del calendario, {datos.get('archivo')} del archivo{extra} enviados a {url}"

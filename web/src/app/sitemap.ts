@@ -1,12 +1,12 @@
 import type { MetadataRoute } from "next";
 import { connection } from "next/server";
-import { getCatalogo } from "@/lib/datos";
+import { getCatalogo, getReflexiones } from "@/lib/datos";
 import { LISTA_SERIES, SITIO } from "@/lib/sitio";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Se arma en cada visita (los datos ya vienen cacheados): así incluye lo que la Mac acaba de enviar.
   await connection();
-  const { publicados, generado } = await getCatalogo();
+  const [{ publicados, generado }, reflexiones] = await Promise.all([getCatalogo(), getReflexiones()]);
   return [
     { url: SITIO.url, lastModified: generado, changeFrequency: "daily", priority: 1 },
     ...LISTA_SERIES.map((serie) => ({
@@ -18,6 +18,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...publicados.map((v) => ({
       url: `${SITIO.url}/${v.serie}/${v.slug}`,
       lastModified: v.publicar,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
+    { url: `${SITIO.url}/reflexiones`, lastModified: reflexiones[0]?.publicado ?? generado, changeFrequency: "weekly", priority: 0.8 },
+    ...reflexiones.map((r) => ({
+      url: `${SITIO.url}/reflexiones/${r.slug}`,
+      lastModified: r.publicado,
       changeFrequency: "monthly" as const,
       priority: 0.6,
     })),

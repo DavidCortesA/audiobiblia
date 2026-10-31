@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { diaSemana, fechaCorta } from "@/lib/fechas";
 import { SERIES, SITIO } from "@/lib/sitio";
-import type { Video } from "@/lib/tipos";
+import type { Reflexion, Video } from "@/lib/tipos";
 import { Escalonado, RevelarHijo } from "./Movimiento";
 import { MarcaEscuchado } from "./Progreso";
 
@@ -17,6 +17,24 @@ export function TarjetaVideo({ video, prioridad = false }: { video: Video; prior
         {fechaCorta(video.fecha)} · {SERIES[video.serie].corto}
       </div>
       <h3 className="tarjeta-titulo">{video.lectura}</h3>
+    </Link>
+  );
+}
+
+export function duracion(segundos: number) {
+  return `${Math.floor(segundos / 60)}:${String(segundos % 60).padStart(2, "0")}`;
+}
+
+export function TarjetaReflexion({ reflexion: r, prioridad = false }: { reflexion: Reflexion; prioridad?: boolean }) {
+  return (
+    <Link href={`/reflexiones/${r.slug}`} className="tarjeta" prefetch={false}>
+      <div className="tarjeta-imagen">
+        <Image src={r.miniatura ?? "/img/amanecer-1200.jpg"} alt={`Reflexión sobre ${r.cita}`} fill sizes="(max-width: 900px) 72vw, 320px" priority={prioridad} />
+        {r.duracion > 0 && <span className="tarjeta-duracion">{duracion(r.duracion)}</span>}
+      </div>
+      <div className="tarjeta-fecha">{fechaCorta(r.fecha)} · Reflexión</div>
+      <h3 className="tarjeta-titulo">{r.cita}</h3>
+      {r.texto && <p className="tarjeta-texto">{r.texto}</p>}
     </Link>
   );
 }
@@ -73,6 +91,7 @@ export function Pie() {
               <li><Link href="/biblia">Audio Biblia</Link></li>
               <li><Link href="/proverbios">Proverbios del día</Link></li>
               <li><Link href="/ninos">Audio Biblia Niños</Link></li>
+              <li><Link href="/reflexiones">Reflexiones</Link></li>
             </ul>
           </div>
           <div>

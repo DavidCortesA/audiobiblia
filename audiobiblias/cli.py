@@ -7,7 +7,7 @@ import sys
 from datetime import date, datetime, timedelta
 from zoneinfo import ZoneInfo
 
-from . import audio, catalogo, descarga, facebook, panel, seleccion, web, youtube
+from . import audio, catalogo, descarga, facebook, panel, reflexiones, seleccion, web, youtube
 from .config import DATA, SERIES, cargar_config, guardar_json, leer_json
 
 ESTADO = DATA / "estado.json"
@@ -343,7 +343,14 @@ def cmd_web_sync(cfg, args):
     cuenta = {s: sum(1 for v in archivo if v["serie"] == s) for s in SERIES}
     print(f"{len(videos)} videos en el calendario · archivo: {cuenta['biblia']} Biblia, "
           f"{cuenta['ninos']} Niños (este año) y {cuenta['proverbios']} Proverbios.")
-    print(web.enviar(cfg, videos, archivo, url=args.url, local=args.local))
+    refl = None
+    if reflexiones.pagina():
+        try:
+            refl = reflexiones.armar(cfg)
+            print(f"Reflexiones: {len(refl)} desde {reflexiones.DESDE:%d/%m/%Y}.")
+        except Exception as e:  # token vencido o sin internet: la página conserva las que ya tenía
+            print(f"⚠ No se pudieron leer las reflexiones de Facebook ({e}).")
+    print(web.enviar(cfg, videos, archivo, url=args.url, local=args.local, reflexiones=refl))
 
 
 def cmd_panel(cfg, args):
@@ -381,6 +388,27 @@ def cmd_auth_facebook(cfg, args):
     facebook.guardar_paginas(elegidas)
     facebook.PAGINAS.chmod(0o600)
     print("Guardadas:", ", ".join(p["nombre"] for p in elegidas))
+
+
+def cmd_auth_reflexiones(cfg, args):
+    print("Token de la página de reflexiones (Audio Biblias), de usuario o de página:")
+    token = getpass.getpass("> (pégalo y Enter; no se ve al pegar) ").strip()
+    version = cfg["facebook"]["graph_version"]
+    todas = reflexiones.autorizar(token, version)
+    if len(todas) == 1:
+        elegida = todas[0]
+    else:
+        for i, p in enumerate(todas, 1):
+            print(f"  {i}. {p['nombre']}")
+        sugerida = next((i for i, p in enumerate(todas, 1) if "audio biblia" in p["nombre"].lower()), 1)
+        n = input(f"Número de la página de reflexiones (Enter = {sugerida}): ").strip()
+        elegida = todas[int(n or sugerida) - 1]
+    reflexiones.guardar(elegida)
+    print(f"Guardada: {elegida['nombre']} ({elegida['id']})")
+    lista = reflexiones.videos(version)
+    print(f"Videos desde {reflexiones.DESDE:%d/%m/%Y}: {len(lista)}")
+    for v in lista[:5]:
+        print(f"  {v['created_time'][:10]}  {(v.get('title') or v.get('description') or '')[:70]}")
 
 
 def main():
@@ -421,6 +449,9 @@ def main():
     s.add_argument("--url", help="dirección de la página (por defecto web.url de config.yaml)")
     s.add_argument("--local", action="store_true", help="solo guardarlo para la página en modo desarrollo")
     s.set_defaults(func=cmd_web_sync)
+
+    s = sub.add_parser("auth-reflexiones", help="token de la página de Facebook de reflexiones (solo lectura)")
+    s.set_defaults(func=cmd_auth_reflexiones)
 
     s = sub.add_parser("panel", help="abre en el navegador el calendario con el estado de cada video")
     s.add_argument("--dias", type=int, default=21, help="cuántos días hacia adelante (por defecto 21)")

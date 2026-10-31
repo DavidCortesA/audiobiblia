@@ -5,19 +5,23 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { fechaCorta } from "@/lib/fechas";
-import { SERIES, type Serie } from "@/lib/sitio";
+import { REFLEXIONES, SERIES, type Serie } from "@/lib/sitio";
 import { MarcaEscuchado } from "./Progreso";
 
 interface Entrada {
   s: string;
-  e: Serie;
+  e: Serie | "reflexiones";
   l: string;
+  t?: string; // texto del versículo (reflexiones)
   f: string;
   d: number;
   m: string;
 }
 
 const SUGERENCIAS = ["Salmo 23", "Juan 3", "Génesis 1", "Proverbios 3", "David", "Jonás", "Daniel"];
+
+const nombreDe = (e: Entrada) => (e.e === "reflexiones" ? `${REFLEXIONES.nombre} reflexion ${e.t ?? ""}` : SERIES[e.e].nombre);
+const cortoDe = (e: Entrada) => (e.e === "reflexiones" ? "Reflexión" : SERIES[e.e].corto);
 
 /** Minúsculas, sin acentos, "salmo" = "salmos". */
 function normalizar(t: string) {
@@ -57,9 +61,9 @@ export function Buscador() {
     const frase = new RegExp(`(^|\\s)${consulta.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?=$|[\\s:])`);
     const tokens = consulta.replace(/:/g, " ").split(" ").filter(Boolean);
     const puntuados = indice.flatMap((e) => {
-      const base = normalizar(`${e.l} ${SERIES[e.e].nombre}`);
+      const base = normalizar(`${e.l} ${nombreDe(e)}`);
       if (frase.test(base)) return [{ e, puntos: 2 }];
-      const suyas = palabras(`${e.l} ${SERIES[e.e].nombre}`);
+      const suyas = palabras(`${e.l} ${nombreDe(e)}`);
       // Números exactos ("3" no encuentra "13"); palabras por inicio ("dav" encuentra "David").
       const todas = tokens.every((t) => (/^\d+$/.test(t) ? suyas.has(t) : [...suyas].some((p) => p.startsWith(t))));
       return todas ? [{ e, puntos: 1 }] : [];
@@ -127,8 +131,8 @@ export function Buscador() {
                   </span>
                   <span>
                     <span className="tarjeta-fecha">
-                      {fechaCorta(r.f)} · {SERIES[r.e].corto}
-                      {r.e !== "proverbios" ? ` · Día ${r.d}` : ""}
+                      {fechaCorta(r.f)} · {cortoDe(r)}
+                      {r.e === "biblia" || r.e === "ninos" ? ` · Día ${r.d}` : ""}
                     </span>
                     <span className="favorito-titulo">{r.l}</span>
                   </span>

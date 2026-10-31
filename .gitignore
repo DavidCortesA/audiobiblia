@@ -12,6 +12,7 @@ data/panel.html
 # Cachés que se regeneran solas (son grandes)
 data/catalogo.json
 data/subidas_youtube.json
+data/reflexiones_portadas.json
 
 # Descargas
 videos/

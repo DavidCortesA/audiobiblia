@@ -1,9 +1,9 @@
 import { cacheLife, cacheTag } from "next/cache";
 import { XMLParser } from "fast-xml-parser";
-import { leerArchivo, leerFeed } from "./almacen";
+import { leerArchivo, leerFeed, leerReflexiones } from "./almacen";
 import { fechaLocal, sumarDias } from "./fechas";
 import { SITIO, type Serie } from "./sitio";
-import type { Video, VideoFeed } from "./tipos";
+import type { Reflexion, Video, VideoFeed } from "./tipos";
 
 const DIAS_PROXIMOS = 5;
 
@@ -93,6 +93,30 @@ export async function getVideo(serie: Serie, slug: string) {
   const i = lista.findIndex((v) => v.slug === slug);
   if (i === -1) return null;
   return { video: lista[i], anterior: lista[i + 1] ?? null, siguiente: lista[i - 1] ?? null };
+}
+
+// ---------- reflexiones ----------
+
+/** Reflexiones de la página de Facebook, de la más nueva a la más vieja. */
+export async function getReflexiones(): Promise<Reflexion[]> {
+  "use cache";
+  cacheLife({ stale: 300, revalidate: 60, expire: 3600 });
+  cacheTag("videos");
+  const lista = await leerReflexiones();
+  return [...lista].sort((a, b) => b.publicado.localeCompare(a.publicado));
+}
+
+export async function getReflexion(slug: string) {
+  const lista = await getReflexiones();
+  const i = lista.findIndex((r) => r.slug === slug);
+  if (i === -1) return null;
+  return { reflexion: lista[i], anterior: lista[i + 1] ?? null, siguiente: lista[i - 1] ?? null };
+}
+
+/** "Proverbios 13:20" → 13 (para enlazar el capítulo completo en audio). */
+export function capituloDeCita(cita: string) {
+  const m = cita.match(/^Proverbios\s+(\d+)/i);
+  return m ? Number(m[1]) : null;
 }
 
 // ---------- feed público del canal (por si se sube algo a mano) ----------

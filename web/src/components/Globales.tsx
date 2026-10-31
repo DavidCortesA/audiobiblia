@@ -12,6 +12,7 @@ const ENLACES = [
   ["/biblia", "Biblia", "La Biblia en un año"],
   ["/proverbios", "Proverbios", "Un capítulo cada día"],
   ["/ninos", "Niños", "Historias para los pequeños"],
+  ["/reflexiones", "Reflexiones", "Un versículo, una reflexión"],
 ] as const;
 
 export function Encabezado() {
