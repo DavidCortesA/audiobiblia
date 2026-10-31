@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Josefin_Sans, Literata } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
-import { AvisoCookies, BarraApp, BarraMovil, Encabezado, RegistrarServiceWorker } from "@/components/Globales";
+import { AvisoAppIOS, AvisoCookies, BarraApp, BarraMovil, Encabezado, RegistrarServiceWorker } from "@/components/Globales";
 import { ProveedorMovimiento } from "@/components/Movimiento";
 import { Pie } from "@/components/Piezas";
 import { SITIO } from "@/lib/sitio";
@@ -65,6 +65,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <BarraMovil />
           <BarraApp />
           <AvisoCookies />
+          <AvisoAppIOS />
         </ProveedorMovimiento>
         <RegistrarServiceWorker />
         <Analytics />

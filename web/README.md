@@ -37,6 +37,7 @@ Hecha con Next.js 16 (App Router, Cache Components) y publicada en Vercel. Se in
 - Se instala desde el navegador (en iPhone: **Compartir → Agregar a pantalla de inicio**).
 - Al abrirla desde el ícono detecta que está instalada y cambia a **modo app**: pestañas **Hoy · Biblia · Proverbios · Niños · Mi espacio**, portada compacta, lupa y engrane (Ajustes) arriba, sin mensajes de "instala la app".
 - En el navegador tiene menú ☰ a pantalla completa y botones fijos abajo.
+- **Enlaces compartidos**: en **Android** (app instalada desde Chrome) los enlaces del sitio que llegan por WhatsApp u otra app se abren directo en la app, en la ventana que ya está abierta (`launch_handler: navigate-existing` y `handle_links: preferred` en el manifiesto). En **iPhone** iOS no lo permite: siempre abren en el navegador, así que ahí aparece una vez un aviso para abrirla desde la pantalla de inicio (o instalarla).
 
 ### Series
 

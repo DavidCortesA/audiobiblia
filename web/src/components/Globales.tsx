@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { Baby, BookHeart, BookOpen, Menu, Play, ScrollText, Search, Settings, Sunrise, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
-import { BotonAvisos } from "./BotonAvisos";
+import { BotonAvisos, esInstalada, esIOS } from "./BotonAvisos";
 
 const ENLACES = [
   ["/biblia", "Biblia", "La Biblia en un año"],
@@ -205,6 +205,48 @@ export function AvisoCookies() {
       >
         Entendido
       </button>
+    </div>
+  );
+}
+
+const LLAVE_APP_IOS = "aviso-app-ios-v1";
+
+/**
+ * iPhone: los enlaces compartidos siempre abren en el navegador (iOS no deja que la app los reciba ni que
+ * la página sepa si está instalada). Un aviso, una sola vez, para abrirla desde la pantalla de inicio.
+ */
+export function AvisoAppIOS() {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const t = window.setTimeout(() => {
+      try {
+        // Después del aviso de cookies, para no encimarlos.
+        setVisible(esIOS() && !esInstalada() && !!localStorage.getItem(LLAVE_COOKIES) && !localStorage.getItem(LLAVE_APP_IOS));
+      } catch {}
+    }, 1500);
+    return () => window.clearTimeout(t);
+  }, []);
+  if (!visible) return null;
+  const cerrar = () => {
+    try {
+      localStorage.setItem(LLAVE_APP_IOS, "ok");
+    } catch {}
+    setVisible(false);
+  };
+  return (
+    <div className="aviso-cookies aviso-app" role="dialog" aria-label="Abrir en la app">
+      <p>
+        <b>¿Tienes la app de Audio Biblia?</b> En iPhone los enlaces se abren en el navegador: para seguir en la app,
+        ábrela desde tu pantalla de inicio. ¿Aún no la tienes? Instálala gratis.
+      </p>
+      <div className="aviso-app-botones">
+        <button type="button" className="boton boton-oscuro boton-chico" onClick={cerrar}>
+          Entendido
+        </button>
+        <Link href="/#app" className="boton boton-fantasma-claro boton-chico" onClick={cerrar}>
+          Cómo instalarla
+        </Link>
+      </div>
     </div>
   );
 }
