@@ -298,6 +298,12 @@ def cmd_programar(cfg, args):
             terminado = (not usar_yt or e["youtube"]) and (not usar_fb or len(e["facebook"]) >= len(paginas))
             if terminado and cfg["borrar_video_al_terminar"] and e["youtube"] != "manual" and os.path.exists(e["archivo"]):
                 os.remove(e["archivo"])
+    if not args.sin_web and cfg.get("web", {}).get("url"):
+        # La página se entera al momento de lo programado (los audios los sube `./ab web-sync`).
+        try:
+            print(web.enviar(cfg, web.armar_feed(cfg, estado, hora_publicacion), []))
+        except Exception as e:
+            print(f"⚠ No se pudo avisar a la página ({e}); se enviará en la siguiente corrida o con ./ab web-sync.")
     print("Listo.")
 
 
@@ -402,6 +408,7 @@ def main():
         s.add_argument("--series", help="biblia,proverbios,ninos (por defecto: todas las activas)")
         if nombre == "programar":
             s.add_argument("--solo", choices=["youtube", "facebook"])
+            s.add_argument("--sin-web", action="store_true", help="no enviar el calendario a la página al terminar")
             s.add_argument("--ahora", action="store_true",
                            help="si la hora de una fecha ya pasó, publicarlo de inmediato en vez de omitirlo")
         s.set_defaults(func=func)

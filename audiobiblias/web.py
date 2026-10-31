@@ -120,4 +120,6 @@ def enviar(cfg, videos, archivo, url=None, local=False):
     if r.status_code != 200:
         raise RuntimeError(f"La página respondió {r.status_code}: {r.text[:200]}")
     datos = r.json()
+    if not archivo:
+        return f"Página actualizada: {datos.get('videos')} videos del calendario enviados a {url}"
     return f"{datos.get('videos')} del calendario y {datos.get('archivo')} del archivo enviados a {url}"
