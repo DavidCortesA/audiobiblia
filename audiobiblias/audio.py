@@ -22,11 +22,27 @@ DIAS_ADELANTE = 15
 MAX_POR_CORRIDA = 24
 
 
+def _node():
+    """Node 18 o más nuevo (el subidor de Vercel Blob no funciona con versiones viejas). Busca en nvm y en el PATH."""
+    candidatos = sorted(Path.home().glob(".nvm/versions/node/v*/bin/node"),
+                        key=lambda p: [int(x) for x in p.parent.parent.name[1:].split(".")], reverse=True)
+    candidatos += [Path(p) / "node" for p in os.environ.get("PATH", "").split(os.pathsep)] + [Path("/opt/homebrew/bin/node")]
+    for c in candidatos:
+        if c.is_file():
+            try:
+                version = subprocess.run([str(c), "-v"], capture_output=True, text=True, timeout=10).stdout.strip()
+            except OSError:
+                continue
+            if version.startswith("v") and int(version[1:].split(".")[0]) >= 18:
+                return str(c)
+    raise RuntimeError("Se necesita Node 18 o más nuevo para subir los audios")
+
+
 def _blob(*args):
     if not TOKEN.exists():
         raise RuntimeError("Falta credenciales/blob_token.txt (token de Vercel Blob)")
     entorno = {**os.environ, "BLOB_READ_WRITE_TOKEN": TOKEN.read_text().strip()}
-    r = subprocess.run(["node", str(SCRIPT), *args], cwd=RAIZ / "web", env=entorno,
+    r = subprocess.run([_node(), str(SCRIPT), *args], cwd=RAIZ / "web", env=entorno,
                        capture_output=True, text=True, timeout=600)
     if r.returncode != 0:
         raise RuntimeError(f"Vercel Blob: {r.stderr.strip()[-300:]}")
