@@ -12,7 +12,7 @@ export interface VideoFeed {
   descripcion: string;
   youtube: string | null;
   facebook: string | null; // ID del video en la página de Facebook elegida
-  audio?: string | null; // URL del audio (Vercel Blob), solo de los últimos 30 días
+  audio?: string | null; // URL del audio (Vercel Blob), solo de los últimos 60 días
 }
 
 export interface Video extends VideoFeed {

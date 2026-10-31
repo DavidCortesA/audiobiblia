@@ -66,7 +66,7 @@ Hace `./ab programar --dias 14`, `./ab web-sync` y actualiza el panel; bitácora
 - **YouTube · cuota de la API**: hay un tope diario (Google Cloud → APIs → YouTube Data API v3 → Cuotas). Se suben hasta `max_subidas_por_corrida` (30) por corrida; si se acaba, lo que falte se sube en la siguiente. Se puede pedir más cuota gratis (formulario "YouTube API Services – Audit and Quota Extension").
 - **YouTube · "confirma que no eres un bot"**: si se descargan muchos videos seguidos, YouTube bloquea las descargas unas horas. El programa no se cae: sigue con lo que ya tiene y lo demás lo intenta después. Hay pausas de 8–25 s entre descargas; si se repite seguido, pon `cookies_navegador: chrome` (o `safari`) en `config.yaml`.
 - **Facebook**: solo se programa hasta 28 días adelante.
-- **Audios**: se guardan los de los últimos 30 días en Vercel Blob (1 GB y ~10 GB de descargas al mes gratis). Si un mes se llena, la página usa YouTube automáticamente. Si crece mucho la audiencia, conviene pasarlos a Cloudflare R2.
+- **Audios**: se guardan los de los últimos 60 días en Vercel Blob (~11 MB por día, unos 680 MB de 1 GB gratis; ~10 GB de descargas al mes). Solo se borran al correr `./ab web-sync`; Vercel no borra nada por su cuenta. Si se llena, la página usa YouTube automáticamente. Si crece mucho la audiencia, conviene pasarlos a Cloudflare R2.
 - **Node**: el subidor de audios necesita Node 18 o más nuevo; lo busca solo en `~/.nvm` aunque el `node` por defecto sea viejo.
 
 ## Configuración (una sola vez)
@@ -89,7 +89,7 @@ audiobiblias/
   seleccion.py            qué video toca cada día (plan de lectura, saltos de capítulo)
   descarga.py             yt-dlp (mp4 H.264, máx. 1080p) con pausas y manejo de bloqueos
   youtube.py · facebook.py  subida programada
-  audio.py                audios AAC 48 kbps → Vercel Blob (borra los de más de 30 días)
+  audio.py                audios AAC 48 kbps → Vercel Blob (borra los de más de 60 días)
   web.py                  calendario y archivo del año → página (/api/sync)
   panel.py                panel local (./ab panel)
   cli.py                  comandos

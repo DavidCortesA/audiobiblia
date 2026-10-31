@@ -330,7 +330,7 @@ def cmd_web_sync(cfg, args):
     estado = cargar_estado()
     try:
         subidos, borrados = audio.sincronizar(cfg, estado, ESTADO)
-        print(f"Audios: {subidos} subidos, {borrados} borrados (más de 30 días).")
+        print(f"Audios: {subidos} subidos, {borrados} borrados (más de {audio.DIAS_ATRAS} días).")
     except Exception as e:  # sin token o sin internet: la página usa el video de YouTube
         print(f"⚠ No se pudieron preparar los audios ({e}).")
     videos = web.armar_feed(cfg, estado, hora_publicacion)

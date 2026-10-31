@@ -1,8 +1,8 @@
 """Audios para el reproductor de la página (se escuchan con la pantalla apagada).
 
-Por cada video del calendario (de hace 30 días a 15 días adelante) se baja solo el audio,
+Por cada video del calendario (de hace 60 días a 15 días adelante) se baja solo el audio,
 se comprime a voz clara (AAC mono 48 kbps, ~0.36 MB por minuto) y se sube a Vercel Blob.
-Los de más de 30 días se borran para no pasar de 1 GB."""
+Los de más de 60 días se borran para no pasar de 1 GB (~11 MB por día con las 3 series)."""
 import json
 import os
 import subprocess
@@ -17,7 +17,7 @@ from .config import CREDENCIALES, RAIZ, guardar_json
 
 TOKEN = CREDENCIALES / "blob_token.txt"
 SCRIPT = RAIZ / "web" / "scripts" / "blob.mjs"
-DIAS_ATRAS = 30
+DIAS_ATRAS = 60
 DIAS_ADELANTE = 15
 MAX_POR_CORRIDA = 24
 
@@ -85,7 +85,7 @@ def sincronizar(cfg, estado, ruta_estado):
     cfg_descargas = cfg.get("descargas", {})
     subidos = borrados = 0
 
-    # 1. Borrar los de más de 30 días (en Blob y en el estado)
+    # 1. Borrar los de más de DIAS_ATRAS días (en Blob y en el estado)
     existentes = json.loads(_blob("list", "audios/") or "[]")
     viejos = [b["url"] for b in existentes if b["pathname"][7:17] < desde.isoformat()]
     if viejos:

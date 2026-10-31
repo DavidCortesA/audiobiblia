@@ -22,7 +22,7 @@ Hecha con Next.js 16 (App Router, Cache Components) y publicada en Vercel. Se in
 
 - **Reproductor de audio propio**: sigue sonando con la pantalla bloqueada o al cambiar de app, con controles en la pantalla de bloqueo (portada, pausa, ±15 s), velocidad 1× · 1.25× · 1.5× · 0.85× y recuerda dónde te quedaste.
 - **Las tres series del día** (Biblia, Proverbios, Niños). Al terminar una, **sigue sola con la siguiente**.
-- **Escuchar en Audio · YouTube · Facebook** (página Montaña De Dios). Los audios de los últimos 30 días están en Vercel Blob; los más viejos usan el video.
+- **Escuchar en Audio · YouTube · Facebook** (página Montaña De Dios). Los audios de los últimos 60 días están en Vercel Blob; los más viejos usan el video.
 - **Aviso si todavía no está el audio de hoy** (antes de las 6:00, si algo se retrasó o si falta una serie).
 - **Próximos 5 días** con la lectura de cada uno.
 
